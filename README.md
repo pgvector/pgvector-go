@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/ankane/pgvector) support for Go
 
-Supports [pg](https://github.com/go-pg/pg) and [Bun](https://github.com/uptrace/bun)
+Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), and [Bun](https://github.com/uptrace/bun)
 
 [![Build Status](https://github.com/ankane/pgvector-go/workflows/build/badge.svg?branch=master)](https://github.com/ankane/pgvector-go/actions)
 
@@ -10,8 +10,27 @@ Supports [pg](https://github.com/go-pg/pg) and [Bun](https://github.com/uptrace/
 
 Follow the instructions for your database library:
 
+- [pgx](#pgx)
 - [pg](#pg)
 - [Bun](#bun)
+
+## pgx
+
+No package is needed :tada:
+
+Insert a vector
+
+```go
+_, err := conn.Exec(ctx, "INSERT INTO items (factors) VALUES ($1::float4[])", []float32{1, 2, 3})
+```
+
+Get the nearest neighbors to a vector
+
+```go
+rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY factors <-> $1::float4[] LIMIT 5", []float32{1, 2, 3})
+```
+
+See a [full example](pgx/pgvector_test.go)
 
 ## pg
 
