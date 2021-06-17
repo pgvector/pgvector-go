@@ -9,6 +9,7 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         go-version: 1.16
+    - run: go mod tidy
     - uses: ankane/setup-postgres@v1
       with:
         database: pgvector_go_test

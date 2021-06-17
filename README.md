@@ -54,5 +54,6 @@ To get started with development:
 ```sh
 git clone https://github.com/ankane/pgvector-go.git
 cd pgvector-go
+go mod tidy
 go test ./...
 ```
