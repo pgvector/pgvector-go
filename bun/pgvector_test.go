@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"testing"
 
+	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
-	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 type Item struct {
