@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/ankane/pgvector) support for Go
 
-Supports [pg](https://github.com/go-pg/pg)
+Supports [pg](https://github.com/go-pg/pg) and [Bun](https://github.com/uptrace/bun)
 
 [![Build Status](https://github.com/ankane/pgvector-go/workflows/build/badge.svg?branch=master)](https://github.com/ankane/pgvector-go/actions)
 
@@ -11,6 +11,7 @@ Supports [pg](https://github.com/go-pg/pg)
 Follow the instructions for your database library:
 
 - [pg](#pg)
+- [Bun](#bun)
 
 ## pg
 
@@ -38,6 +39,34 @@ Get the nearest neighbors to a vector
 ```go
 var items []Item
 err = db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
+```
+
+## Bun
+
+No package is needed :tada:
+
+Add a vector column
+
+```go
+type Item struct {
+    Factors []float32 `bun:"type:vector(3)"`
+}
+```
+
+Insert a vector
+
+```go
+item := Item{
+    Factors: []float32{1, 2, 3},
+}
+_, err = db.NewInsert().Model(&item).Exec(ctx)
+```
+
+Get the nearest neighbors to a vector
+
+```go
+var items []Item
+err = db.NewSelect().Model(&items).OrderExpr("factors <-> ?", []float32{1, 2, 3}).Limit(5).Scan(ctx)
 ```
 
 ## Contributing
