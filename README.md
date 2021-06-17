@@ -1,6 +1,6 @@
 # pgvector-go
 
-[pgvector](https://github.com/ankane/pgvector) support for Go
+[pgvector](https://github.com/ankane/pgvector) examples for Go
 
 Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), and [Bun](https://github.com/uptrace/bun)
 
@@ -15,8 +15,6 @@ Follow the instructions for your database library:
 - [Bun](#bun)
 
 ## pgx
-
-No package is needed :tada:
 
 Insert a vector
 
@@ -33,8 +31,6 @@ rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY factors <-> $1::floa
 See a [full example](pgx/pgvector_test.go)
 
 ## pg
-
-No package is needed :tada:
 
 Add a vector column
 
@@ -63,8 +59,6 @@ err := db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 2, 3}).Limit(5)
 See a [full example](pg/pgvector_test.go)
 
 ## Bun
-
-No package is needed :tada:
 
 Add a vector column
 
