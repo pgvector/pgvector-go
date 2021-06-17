@@ -28,10 +28,10 @@ type Item struct {
 Insert a vector
 
 ```go
-item := &Item{
+item := Item{
     Factors: [3]float32{1, 2, 3},
 }
-_, err = db.Model(item).Insert()
+_, err = db.Model(&item).Insert()
 ```
 
 Get the nearest neighbors to a vector
