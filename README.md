@@ -41,6 +41,8 @@ var items []Item
 err = db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
 ```
 
+See a [full example](pg/pgvector_test.go)
+
 ## Bun
 
 No package is needed :tada:
@@ -68,6 +70,8 @@ Get the nearest neighbors to a vector
 var items []Item
 err = db.NewSelect().Model(&items).OrderExpr("factors <-> ?", []float32{1, 2, 3}).Limit(5).Scan(ctx)
 ```
+
+See a [full example](bun/pgvector_test.go)
 
 ## Contributing
 
