@@ -50,14 +50,14 @@ Insert a vector
 item := Item{
     Factors: [3]float32{1, 2, 3},
 }
-_, err = db.Model(&item).Insert()
+_, err := db.Model(&item).Insert()
 ```
 
 Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err = db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
+err := db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
 ```
 
 See a [full example](pg/pgvector_test.go)
@@ -80,14 +80,14 @@ Insert a vector
 item := Item{
     Factors: []float32{1, 2, 3},
 }
-_, err = db.NewInsert().Model(&item).Exec(ctx)
+_, err := db.NewInsert().Model(&item).Exec(ctx)
 ```
 
 Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err = db.NewSelect().Model(&items).OrderExpr("factors <-> ?", []float32{1, 2, 3}).Limit(5).Scan(ctx)
+err := db.NewSelect().Model(&items).OrderExpr("factors <-> ?", []float32{1, 2, 3}).Limit(5).Scan(ctx)
 ```
 
 See a [full example](bun/pgvector_test.go)
