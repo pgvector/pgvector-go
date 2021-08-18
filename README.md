@@ -101,5 +101,6 @@ To get started with development:
 git clone https://github.com/ankane/pgvector-go.git
 cd pgvector-go
 go mod tidy
+createdb pgvector_go_test
 go test ./...
 ```
