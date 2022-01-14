@@ -46,7 +46,7 @@ func TestWorks(t *testing.T) {
 	CreateItems(db)
 
 	var items []Item
-	err = db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 1, 1}).Limit(5).Select()
+	err = db.Model(&items).OrderExpr("factors <-> ?::vector", [3]float32{1, 1, 1}).Limit(5).Select()
 	if err != nil {
 		panic(err)
 	}

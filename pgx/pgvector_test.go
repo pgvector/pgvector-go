@@ -42,7 +42,7 @@ func TestWorks(t *testing.T) {
 
 	CreateItems(conn, ctx)
 
-	rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY factors <-> $1::float4[] LIMIT 5", []float32{1, 1, 1})
+	rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY factors <-> $1::float4[]::vector LIMIT 5", []float32{1, 1, 1})
 	if err != nil {
 		panic(err)
 	}

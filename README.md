@@ -25,7 +25,7 @@ _, err := conn.Exec(ctx, "INSERT INTO items (factors) VALUES ($1::float4[])", []
 Get the nearest neighbors to a vector
 
 ```go
-rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY factors <-> $1::float4[] LIMIT 5", []float32{1, 2, 3})
+rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY factors <-> $1::float4[]::vector LIMIT 5", []float32{1, 2, 3})
 ```
 
 See a [full example](pgx/pgvector_test.go)
@@ -53,7 +53,7 @@ Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err := db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
+err := db.Model(&items).OrderExpr("factors <-> ?::vector", [3]float32{1, 2, 3}).Limit(5).Select()
 ```
 
 See a [full example](pg/pgvector_test.go)
