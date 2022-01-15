@@ -12,6 +12,8 @@ import (
 )
 
 type Item struct {
+	bun.BaseModel `bun:"table:bun_items"`
+
 	Id      int64
 	Factors []float32 `bun:"type:vector(3)"`
 }
@@ -40,7 +42,7 @@ func TestWorks(t *testing.T) {
 	db := bun.NewDB(sqldb, pgdialect.New())
 
 	db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
-	db.Exec("DROP TABLE IF EXISTS items")
+	db.Exec("DROP TABLE IF EXISTS bun_items")
 
 	_, err = db.NewCreateTable().Model((*Item)(nil)).Exec(ctx)
 	if err != nil {

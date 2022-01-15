@@ -20,7 +20,7 @@ func CreateItems(conn *pgx.Conn, ctx context.Context) {
 	}
 
 	for _, item := range items {
-		_, err := conn.Exec(ctx, "INSERT INTO items (factors) VALUES ($1::float4[])", item.Factors)
+		_, err := conn.Exec(ctx, "INSERT INTO pgx_items (factors) VALUES ($1::float4[])", item.Factors)
 		if err != nil {
 			panic(err)
 		}
@@ -37,12 +37,12 @@ func TestWorks(t *testing.T) {
 	defer conn.Close(ctx)
 
 	conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
-	conn.Exec(ctx, "DROP TABLE IF EXISTS items")
-	conn.Exec(ctx, "CREATE TABLE items (id bigserial primary key, factors vector(3))")
+	conn.Exec(ctx, "DROP TABLE IF EXISTS pgx_items")
+	conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial primary key, factors vector(3))")
 
 	CreateItems(conn, ctx)
 
-	rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY factors <-> $1::float4[]::vector LIMIT 5", []float32{1, 1, 1})
+	rows, err := conn.Query(ctx, "SELECT id FROM pgx_items ORDER BY factors <-> $1::float4[]::vector LIMIT 5", []float32{1, 1, 1})
 	if err != nil {
 		panic(err)
 	}

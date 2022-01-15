@@ -9,6 +9,8 @@ import (
 )
 
 type Item struct {
+	tableName struct{} `pg:"pg_items"`
+
 	Id      int64
 	Factors [3]float32 `pg:"type:vector(3)"`
 }
@@ -36,7 +38,7 @@ func TestWorks(t *testing.T) {
 	defer db.Close()
 
 	db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
-	db.Exec("DROP TABLE IF EXISTS items")
+	db.Exec("DROP TABLE IF EXISTS pg_items")
 
 	err := db.Model((*Item)(nil)).CreateTable(&orm.CreateTableOptions{})
 	if err != nil {
