@@ -53,7 +53,7 @@ Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err := db.Model(&items).OrderExpr("factors <-> ?::vector", [3]float32{1, 2, 3}).Limit(5).Select()
+err := db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
 ```
 
 See a [full example](pg/pgvector_test.go)
