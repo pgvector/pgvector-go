@@ -1,10 +1,10 @@
 # pgvector-go
 
-[pgvector](https://github.com/ankane/pgvector) examples for Go
+[pgvector](https://github.com/pgvector/pgvector) examples for Go
 
 Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), and [Bun](https://github.com/uptrace/bun)
 
-[![Build Status](https://github.com/ankane/pgvector-go/workflows/build/badge.svg?branch=master)](https://github.com/ankane/pgvector-go/actions)
+[![Build Status](https://github.com/pgvector/pgvector-go/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-go/actions)
 
 ## Getting Started
 
@@ -90,15 +90,15 @@ See a [full example](bun/pgvector_test.go)
 
 Everyone is encouraged to help improve this project. Here are a few ways you can help:
 
-- [Report bugs](https://github.com/ankane/pgvector-go/issues)
-- Fix bugs and [submit pull requests](https://github.com/ankane/pgvector-go/pulls)
+- [Report bugs](https://github.com/pgvector/pgvector-go/issues)
+- Fix bugs and [submit pull requests](https://github.com/pgvector/pgvector-go/pulls)
 - Write, clarify, or fix documentation
 - Suggest or add new features
 
 To get started with development:
 
 ```sh
-git clone https://github.com/ankane/pgvector-go.git
+git clone https://github.com/pgvector/pgvector-go.git
 cd pgvector-go
 go mod tidy
 createdb pgvector_go_test

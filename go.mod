@@ -1,4 +1,4 @@
-module github.com/ankane/pgvector-go
+module github.com/pgvector/pgvector-go
 
 go 1.17
 
