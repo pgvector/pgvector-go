@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 )
@@ -14,7 +14,7 @@ import (
 type Item struct {
 	bun.BaseModel `bun:"table:bun_items"`
 
-	Id      int64
+	Id      int64     `bun:",pk,autoincrement"`
 	Factors []float32 `bun:"type:vector(3)"`
 }
 
