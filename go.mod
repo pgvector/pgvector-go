@@ -7,6 +7,7 @@ require (
 	github.com/jackc/pgx/v5 v5.0.0
 	github.com/uptrace/bun v1.1.8
 	github.com/uptrace/bun/dialect/pgdialect v1.1.8
+	github.com/uptrace/bun/driver/pgdriver v1.1.8
 )
 
 require (

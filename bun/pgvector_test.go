@@ -3,12 +3,13 @@ package pgvector
 import (
 	"context"
 	"database/sql"
+	"os"
 	"reflect"
 	"testing"
 
-	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 )
 
 type Item struct {
@@ -34,17 +35,18 @@ func CreateItems(db *bun.DB, ctx context.Context) {
 func TestWorks(t *testing.T) {
 	ctx := context.Background()
 
-	sqldb, err := sql.Open("pgx", "postgres://localhost/pgvector_go_test?sslmode=disable")
-	if err != nil {
-		panic(err)
-	}
-
+	pgconn := pgdriver.NewConnector(
+		pgdriver.WithDatabase("pgvector_go_test"),
+		pgdriver.WithUser(os.Getenv("USER")),
+		pgdriver.WithTLSConfig(nil), // sslmode=disable
+	)
+	sqldb := sql.OpenDB(pgconn)
 	db := bun.NewDB(sqldb, pgdialect.New())
 
 	db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
 	db.Exec("DROP TABLE IF EXISTS bun_items")
 
-	_, err = db.NewCreateTable().Model((*Item)(nil)).Exec(ctx)
+	_, err := db.NewCreateTable().Model((*Item)(nil)).Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
