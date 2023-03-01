@@ -1,6 +1,6 @@
 module github.com/pgvector/pgvector-go
 
-go 1.19
+go 1.20
 
 require (
 	github.com/go-pg/pg/v10 v10.10.6
