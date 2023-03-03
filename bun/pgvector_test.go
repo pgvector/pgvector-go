@@ -15,15 +15,15 @@ import (
 type Item struct {
 	bun.BaseModel `bun:"table:bun_items"`
 
-	Id      int64     `bun:",pk,autoincrement"`
-	Factors []float32 `bun:"type:vector(3)"`
+	Id        int64     `bun:",pk,autoincrement"`
+	Embedding []float32 `bun:"type:vector(3)"`
 }
 
 func CreateItems(db *bun.DB, ctx context.Context) {
 	items := []Item{
-		Item{Factors: []float32{1, 1, 1}},
-		Item{Factors: []float32{2, 2, 2}},
-		Item{Factors: []float32{1, 1, 2}},
+		Item{Embedding: []float32{1, 1, 1}},
+		Item{Embedding: []float32{2, 2, 2}},
+		Item{Embedding: []float32{1, 1, 2}},
 	}
 
 	_, err := db.NewInsert().Model(&items).Exec(ctx)
@@ -54,14 +54,14 @@ func TestWorks(t *testing.T) {
 	CreateItems(db, ctx)
 
 	var items []Item
-	err = db.NewSelect().Model(&items).OrderExpr("factors <-> ?", []float32{1, 1, 1}).Limit(5).Scan(ctx)
+	err = db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", []float32{1, 1, 1}).Limit(5).Scan(ctx)
 	if err != nil {
 		panic(err)
 	}
 	if items[0].Id != 1 || items[1].Id != 3 || items[2].Id != 2 {
 		t.Errorf("Bad ids")
 	}
-	if !reflect.DeepEqual(items[1].Factors, []float32{1, 1, 2}) {
-		t.Errorf("Bad factors")
+	if !reflect.DeepEqual(items[1].Embedding, []float32{1, 1, 2}) {
+		t.Errorf("Bad embedding")
 	}
 }

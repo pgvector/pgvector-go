@@ -8,19 +8,19 @@ import (
 )
 
 type Item struct {
-	Id      int64
-	Factors []float32
+	Id        int64
+	Embedding []float32
 }
 
 func CreateItems(conn *pgx.Conn, ctx context.Context) {
 	items := []Item{
-		Item{Factors: []float32{1, 1, 1}},
-		Item{Factors: []float32{2, 2, 2}},
-		Item{Factors: []float32{1, 1, 2}},
+		Item{Embedding: []float32{1, 1, 1}},
+		Item{Embedding: []float32{2, 2, 2}},
+		Item{Embedding: []float32{1, 1, 2}},
 	}
 
 	for _, item := range items {
-		_, err := conn.Exec(ctx, "INSERT INTO pgx_items (factors) VALUES ($1::float4[])", item.Factors)
+		_, err := conn.Exec(ctx, "INSERT INTO pgx_items (embedding) VALUES ($1::float4[])", item.Embedding)
 		if err != nil {
 			panic(err)
 		}
@@ -38,11 +38,11 @@ func TestWorks(t *testing.T) {
 
 	conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
 	conn.Exec(ctx, "DROP TABLE IF EXISTS pgx_items")
-	conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial primary key, factors vector(3))")
+	conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial primary key, embedding vector(3))")
 
 	CreateItems(conn, ctx)
 
-	rows, err := conn.Query(ctx, "SELECT id FROM pgx_items ORDER BY factors <-> $1::float4[]::vector LIMIT 5", []float32{1, 1, 1})
+	rows, err := conn.Query(ctx, "SELECT id FROM pgx_items ORDER BY embedding <-> $1::float4[]::vector LIMIT 5", []float32{1, 1, 1})
 	if err != nil {
 		panic(err)
 	}

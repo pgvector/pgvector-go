@@ -19,13 +19,13 @@ Follow the instructions for your database library:
 Insert a vector
 
 ```go
-_, err := conn.Exec(ctx, "INSERT INTO items (factors) VALUES ($1::float4[])", []float32{1, 2, 3})
+_, err := conn.Exec(ctx, "INSERT INTO items (embedding) VALUES ($1::float4[])", []float32{1, 2, 3})
 ```
 
 Get the nearest neighbors to a vector
 
 ```go
-rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY factors <-> $1::float4[]::vector LIMIT 5", []float32{1, 2, 3})
+rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY embedding <-> $1::float4[]::vector LIMIT 5", []float32{1, 2, 3})
 ```
 
 See a [full example](pgx/pgvector_test.go)
@@ -36,7 +36,7 @@ Add a vector column
 
 ```go
 type Item struct {
-    Factors [3]float32 `pg:"type:vector(3)"`
+    Embedding [3]float32 `pg:"type:vector(3)"`
 }
 ```
 
@@ -44,7 +44,7 @@ Insert a vector
 
 ```go
 item := Item{
-    Factors: [3]float32{1, 2, 3},
+    Embedding: [3]float32{1, 2, 3},
 }
 _, err := db.Model(&item).Insert()
 ```
@@ -53,7 +53,7 @@ Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err := db.Model(&items).OrderExpr("factors <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
+err := db.Model(&items).OrderExpr("embedding <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
 ```
 
 See a [full example](pg/pgvector_test.go)
@@ -64,7 +64,7 @@ Add a vector column
 
 ```go
 type Item struct {
-    Factors []float32 `bun:"type:vector(3)"`
+    Embedding []float32 `bun:"type:vector(3)"`
 }
 ```
 
@@ -72,7 +72,7 @@ Insert a vector
 
 ```go
 item := Item{
-    Factors: []float32{1, 2, 3},
+    Embedding: []float32{1, 2, 3},
 }
 _, err := db.NewInsert().Model(&item).Exec(ctx)
 ```
@@ -81,7 +81,7 @@ Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err := db.NewSelect().Model(&items).OrderExpr("factors <-> ?", []float32{1, 2, 3}).Limit(5).Scan(ctx)
+err := db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", []float32{1, 2, 3}).Limit(5).Scan(ctx)
 ```
 
 See a [full example](bun/pgvector_test.go)
