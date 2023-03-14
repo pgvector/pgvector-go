@@ -1,6 +1,6 @@
 # pgvector-go
 
-[pgvector](https://github.com/pgvector/pgvector) examples for Go
+[pgvector](https://github.com/pgvector/pgvector) support for Go
 
 Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), and [Bun](https://github.com/uptrace/bun)
 
@@ -8,7 +8,19 @@ Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg),
 
 ## Getting Started
 
-Follow the instructions for your database library:
+Run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+```
+
+Import the package:
+
+```go
+import "github.com/pgvector/pgvector-go"
+```
+
+And follow the instructions for your database library:
 
 - [pgx](#pgx)
 - [pg](#pg)
@@ -19,16 +31,16 @@ Follow the instructions for your database library:
 Insert a vector
 
 ```go
-_, err := conn.Exec(ctx, "INSERT INTO items (embedding) VALUES ($1::float4[])", []float32{1, 2, 3})
+_, err := conn.Exec(ctx, "INSERT INTO items (embedding) VALUES ($1)", pgvector.NewVector([]float32{1, 2, 3}))
 ```
 
 Get the nearest neighbors to a vector
 
 ```go
-rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY embedding <-> $1::float4[]::vector LIMIT 5", []float32{1, 2, 3})
+rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 2, 3}))
 ```
 
-See a [full example](pgx/pgvector_test.go)
+See a [full example](pgx_test.go)
 
 ## pg
 
@@ -36,7 +48,7 @@ Add a vector column
 
 ```go
 type Item struct {
-    Embedding [3]float32 `pg:"type:vector(3)"`
+    Embedding pgvector.Vector `pg:"type:vector(3)"`
 }
 ```
 
@@ -44,7 +56,7 @@ Insert a vector
 
 ```go
 item := Item{
-    Embedding: [3]float32{1, 2, 3},
+    Embedding: pgvector.NewVector([]float32{1, 2, 3}),
 }
 _, err := db.Model(&item).Insert()
 ```
@@ -53,10 +65,10 @@ Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err := db.Model(&items).OrderExpr("embedding <-> ?", [3]float32{1, 2, 3}).Limit(5).Select()
+err := db.Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).Limit(5).Select()
 ```
 
-See a [full example](pg/pgvector_test.go)
+See a [full example](pg_test.go)
 
 ## Bun
 
@@ -64,7 +76,7 @@ Add a vector column
 
 ```go
 type Item struct {
-    Embedding []float32 `bun:"type:vector(3)"`
+    Embedding pgvector.Vector `bun:"type:vector(3)"`
 }
 ```
 
@@ -72,7 +84,7 @@ Insert a vector
 
 ```go
 item := Item{
-    Embedding: []float32{1, 2, 3},
+    Embedding: pgvector.NewVector([]float32{1, 2, 3}),
 }
 _, err := db.NewInsert().Model(&item).Exec(ctx)
 ```
@@ -81,10 +93,10 @@ Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err := db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", []float32{1, 2, 3}).Limit(5).Scan(ctx)
+err := db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).Limit(5).Scan(ctx)
 ```
 
-See a [full example](bun/pgvector_test.go)
+See a [full example](bun_test.go)
 
 ## Contributing
 

@@ -7,27 +7,27 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-type Item struct {
+type PgxItem struct {
 	Id        int64
-	Embedding []float32
+	Embedding Vector
 }
 
-func CreateItems(conn *pgx.Conn, ctx context.Context) {
-	items := []Item{
-		Item{Embedding: []float32{1, 1, 1}},
-		Item{Embedding: []float32{2, 2, 2}},
-		Item{Embedding: []float32{1, 1, 2}},
+func CreatePgxItems(conn *pgx.Conn, ctx context.Context) {
+	items := []PgxItem{
+		PgxItem{Embedding: NewVector([]float32{1, 1, 1})},
+		PgxItem{Embedding: NewVector([]float32{2, 2, 2})},
+		PgxItem{Embedding: NewVector([]float32{1, 1, 2})},
 	}
 
 	for _, item := range items {
-		_, err := conn.Exec(ctx, "INSERT INTO pgx_items (embedding) VALUES ($1::float4[])", item.Embedding)
+		_, err := conn.Exec(ctx, "INSERT INTO pgx_items (embedding) VALUES ($1)", item.Embedding)
 		if err != nil {
 			panic(err)
 		}
 	}
 }
 
-func TestWorks(t *testing.T) {
+func TestPgx(t *testing.T) {
 	ctx := context.Background()
 
 	conn, err := pgx.Connect(ctx, "postgres://localhost/pgvector_go_test")
@@ -40,17 +40,17 @@ func TestWorks(t *testing.T) {
 	conn.Exec(ctx, "DROP TABLE IF EXISTS pgx_items")
 	conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial primary key, embedding vector(3))")
 
-	CreateItems(conn, ctx)
+	CreatePgxItems(conn, ctx)
 
-	rows, err := conn.Query(ctx, "SELECT id FROM pgx_items ORDER BY embedding <-> $1::float4[]::vector LIMIT 5", []float32{1, 1, 1})
+	rows, err := conn.Query(ctx, "SELECT id FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", NewVector([]float32{1, 1, 1}))
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 
-	var items []Item
+	var items []PgxItem
 	for rows.Next() {
-		var item Item
+		var item PgxItem
 		err = rows.Scan(&item.Id)
 		if err != nil {
 			panic(err)

@@ -2,24 +2,25 @@ package pgvector
 
 import (
 	"os"
+	"reflect"
 	"testing"
 
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 )
 
-type Item struct {
+type PgItem struct {
 	tableName struct{} `pg:"pg_items"`
 
 	Id        int64
-	Embedding [3]float32 `pg:"type:vector(3)"`
+	Embedding Vector `pg:"type:vector(3)"`
 }
 
-func CreateItems(db *pg.DB) {
-	items := []Item{
-		Item{Embedding: [3]float32{1, 1, 1}},
-		Item{Embedding: [3]float32{2, 2, 2}},
-		Item{Embedding: [3]float32{1, 1, 2}},
+func CreatePgItems(db *pg.DB) {
+	items := []PgItem{
+		PgItem{Embedding: NewVector([]float32{1, 1, 1})},
+		PgItem{Embedding: NewVector([]float32{2, 2, 2})},
+		PgItem{Embedding: NewVector([]float32{1, 1, 2})},
 	}
 
 	for _, item := range items {
@@ -30,7 +31,7 @@ func CreateItems(db *pg.DB) {
 	}
 }
 
-func TestWorks(t *testing.T) {
+func TestPg(t *testing.T) {
 	db := pg.Connect(&pg.Options{
 		User:     os.Getenv("USER"),
 		Database: "pgvector_go_test",
@@ -40,22 +41,22 @@ func TestWorks(t *testing.T) {
 	db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
 	db.Exec("DROP TABLE IF EXISTS pg_items")
 
-	err := db.Model((*Item)(nil)).CreateTable(&orm.CreateTableOptions{})
+	err := db.Model((*PgItem)(nil)).CreateTable(&orm.CreateTableOptions{})
 	if err != nil {
 		panic(err)
 	}
 
-	CreateItems(db)
+	CreatePgItems(db)
 
-	var items []Item
-	err = db.Model(&items).OrderExpr("embedding <-> ?", [3]float32{1, 1, 1}).Limit(5).Select()
+	var items []PgItem
+	err = db.Model(&items).OrderExpr("embedding <-> ?", NewVector([]float32{1, 1, 1})).Limit(5).Select()
 	if err != nil {
 		panic(err)
 	}
 	if items[0].Id != 1 || items[1].Id != 3 || items[2].Id != 2 {
 		t.Errorf("Bad ids")
 	}
-	if items[1].Embedding != [3]float32{1, 1, 2} {
+	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad embedding")
 	}
 }

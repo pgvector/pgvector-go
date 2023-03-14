@@ -12,18 +12,18 @@ import (
 	"github.com/uptrace/bun/driver/pgdriver"
 )
 
-type Item struct {
+type BunItem struct {
 	bun.BaseModel `bun:"table:bun_items"`
 
-	Id        int64     `bun:",pk,autoincrement"`
-	Embedding []float32 `bun:"type:vector(3)"`
+	Id        int64  `bun:",pk,autoincrement"`
+	Embedding Vector `bun:"type:vector(3)"`
 }
 
-func CreateItems(db *bun.DB, ctx context.Context) {
-	items := []Item{
-		Item{Embedding: []float32{1, 1, 1}},
-		Item{Embedding: []float32{2, 2, 2}},
-		Item{Embedding: []float32{1, 1, 2}},
+func CreateBunItems(db *bun.DB, ctx context.Context) {
+	items := []BunItem{
+		BunItem{Embedding: NewVector([]float32{1, 1, 1})},
+		BunItem{Embedding: NewVector([]float32{2, 2, 2})},
+		BunItem{Embedding: NewVector([]float32{1, 1, 2})},
 	}
 
 	_, err := db.NewInsert().Model(&items).Exec(ctx)
@@ -32,7 +32,7 @@ func CreateItems(db *bun.DB, ctx context.Context) {
 	}
 }
 
-func TestWorks(t *testing.T) {
+func TestBun(t *testing.T) {
 	ctx := context.Background()
 
 	pgconn := pgdriver.NewConnector(
@@ -46,22 +46,22 @@ func TestWorks(t *testing.T) {
 	db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
 	db.Exec("DROP TABLE IF EXISTS bun_items")
 
-	_, err := db.NewCreateTable().Model((*Item)(nil)).Exec(ctx)
+	_, err := db.NewCreateTable().Model((*BunItem)(nil)).Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 
-	CreateItems(db, ctx)
+	CreateBunItems(db, ctx)
 
-	var items []Item
-	err = db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", []float32{1, 1, 1}).Limit(5).Scan(ctx)
+	var items []BunItem
+	err = db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", NewVector([]float32{1, 1, 1})).Limit(5).Scan(ctx)
 	if err != nil {
 		panic(err)
 	}
 	if items[0].Id != 1 || items[1].Id != 3 || items[2].Id != 2 {
 		t.Errorf("Bad ids")
 	}
-	if !reflect.DeepEqual(items[1].Embedding, []float32{1, 1, 2}) {
+	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad embedding")
 	}
 }
