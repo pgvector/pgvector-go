@@ -2,6 +2,7 @@ package pgvector
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/jackc/pgx/v5"
@@ -42,7 +43,7 @@ func TestPgx(t *testing.T) {
 
 	CreatePgxItems(conn, ctx)
 
-	rows, err := conn.Query(ctx, "SELECT id FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", NewVector([]float32{1, 1, 1}))
+	rows, err := conn.Query(ctx, "SELECT * FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", NewVector([]float32{1, 1, 1}))
 	if err != nil {
 		panic(err)
 	}
@@ -51,7 +52,7 @@ func TestPgx(t *testing.T) {
 	var items []PgxItem
 	for rows.Next() {
 		var item PgxItem
-		err = rows.Scan(&item.Id)
+		err = rows.Scan(&item.Id, &item.Embedding)
 		if err != nil {
 			panic(err)
 		}
@@ -64,5 +65,8 @@ func TestPgx(t *testing.T) {
 
 	if items[0].Id != 1 || items[1].Id != 3 || items[2].Id != 2 {
 		t.Errorf("Bad ids")
+	}
+	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
+		t.Errorf("Bad embedding")
 	}
 }
