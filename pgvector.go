@@ -54,6 +54,8 @@ func (v *Vector) Scan(src interface{}) (err error) {
 	switch src := src.(type) {
 	case []byte:
 		return v.Parse(string(src))
+	case string:
+		return v.Parse(src)
 	default:
 		return fmt.Errorf("unsupported data type: %T", src)
 	}
