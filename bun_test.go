@@ -3,6 +3,7 @@ package pgvector
 import (
 	"context"
 	"database/sql"
+	"math"
 	"os"
 	"reflect"
 	"testing"
@@ -63,5 +64,14 @@ func TestBun(t *testing.T) {
 	}
 	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad embedding")
+	}
+
+	var distances []float64
+	err = db.NewSelect().Model(&items).ColumnExpr("embedding <-> ?", NewVector([]float32{1, 1, 1})).Order("id").Scan(ctx, &distances)
+	if err != nil {
+		panic(err)
+	}
+	if distances[0] != 0 || distances[1] != math.Sqrt(3) || distances[2] != 1 {
+		t.Errorf("Bad distances")
 	}
 }
