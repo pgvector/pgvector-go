@@ -2,6 +2,7 @@ package pgvector
 
 import (
 	"context"
+	"math"
 	"reflect"
 	"testing"
 
@@ -43,20 +44,23 @@ func TestPgx(t *testing.T) {
 
 	CreatePgxItems(conn, ctx)
 
-	rows, err := conn.Query(ctx, "SELECT * FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", NewVector([]float32{1, 1, 1}))
+	rows, err := conn.Query(ctx, "SELECT *, embedding <-> $1 FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", NewVector([]float32{1, 1, 1}))
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 
 	var items []PgxItem
+	var distances []float64
 	for rows.Next() {
 		var item PgxItem
-		err = rows.Scan(&item.Id, &item.Embedding)
+		var distance float64
+		err = rows.Scan(&item.Id, &item.Embedding, &distance)
 		if err != nil {
 			panic(err)
 		}
 		items = append(items, item)
+		distances = append(distances, distance)
 	}
 
 	if rows.Err() != nil {
@@ -68,5 +72,8 @@ func TestPgx(t *testing.T) {
 	}
 	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad embedding")
+	}
+	if distances[0] != 0 || distances[1] != 1 || distances[2] != math.Sqrt(3) {
+		t.Errorf("Bad distances")
 	}
 }
