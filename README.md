@@ -76,6 +76,14 @@ var items []Item
 err := db.Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).Limit(5).Select()
 ```
 
+Add an approximate index
+
+```go
+_, err := conn.Exec(ctx, "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
 See a [full example](pg_test.go)
 
 ## Bun

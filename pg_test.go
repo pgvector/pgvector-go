@@ -47,6 +47,11 @@ func TestPg(t *testing.T) {
 		panic(err)
 	}
 
+	_, err = db.Exec("CREATE INDEX ON pg_items USING hnsw (embedding vector_l2_ops)")
+	if err != nil {
+		panic(err)
+	}
+
 	CreatePgItems(db)
 
 	var items []PgItem
