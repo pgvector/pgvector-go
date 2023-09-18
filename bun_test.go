@@ -20,6 +20,18 @@ type BunItem struct {
 	Embedding Vector `bun:"type:vector(3)"`
 }
 
+var _ bun.AfterCreateTableHook = (*BunItem)(nil)
+
+func (*BunItem) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuery) error {
+	_, err := query.DB().NewCreateIndex().
+		Model((*BunItem)(nil)).
+		Index("bun_items_embedding_idx").
+		ColumnExpr("embedding vector_l2_ops").
+		Using("hnsw").
+		Exec(ctx)
+	return err
+}
+
 func CreateBunItems(db *bun.DB, ctx context.Context) {
 	items := []BunItem{
 		BunItem{Embedding: NewVector([]float32{1, 1, 1})},
