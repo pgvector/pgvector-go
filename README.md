@@ -96,6 +96,24 @@ var items []Item
 err := db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).Limit(5).Scan(ctx)
 ```
 
+Add an approximate index
+
+```go
+var _ bun.AfterCreateTableHook = (*Item)(nil)
+
+func (*BunItem) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuery) error {
+    _, err := query.DB().NewCreateIndex().
+        Model((*Item)(nil)).
+        Index("items_embedding_idx").
+        ColumnExpr("embedding vector_l2_ops").
+        Using("hnsw").
+        Exec(ctx)
+    return err
+}
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
 See a [full example](bun_test.go)
 
 ## Contributing
