@@ -41,7 +41,7 @@ func TestPgx(t *testing.T) {
 	conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
 	conn.Exec(ctx, "DROP TABLE IF EXISTS pgx_items")
 
-	_, err = conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial primary key, embedding vector(3))")
+	_, err = conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial PRIMARY KEY, embedding vector(3))")
 	if err != nil {
 		panic(err)
 	}
