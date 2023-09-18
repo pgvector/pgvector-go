@@ -26,6 +26,10 @@ And follow the instructions for your database library:
 - [pg](#pg)
 - [Bun](#bun)
 
+Or check out an example:
+
+- [Embeddings](openai_test.go) with OpenAI
+
 ## pgx
 
 Insert a vector
