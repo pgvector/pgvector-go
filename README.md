@@ -117,7 +117,7 @@ Add an approximate index
 ```go
 var _ bun.AfterCreateTableHook = (*Item)(nil)
 
-func (*BunItem) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuery) error {
+func (*Item) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuery) error {
     _, err := query.DB().NewCreateIndex().
         Model((*Item)(nil)).
         Index("items_embedding_idx").
