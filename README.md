@@ -59,6 +59,8 @@ rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY embedding <-> $1 LIM
 Add an approximate index
 
 ```go
+_, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
+// or
 _, err := conn.Exec(ctx, "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
 ```
 
@@ -101,6 +103,8 @@ err := db.Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float3
 Add an approximate index
 
 ```go
+_, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
+// or
 _, err := conn.Exec(ctx, "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
 ```
 
