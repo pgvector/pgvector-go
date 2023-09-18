@@ -32,6 +32,18 @@ Or check out an example:
 
 ## pgx
 
+Enable the extension
+
+```go
+_, err := conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
+```
+
+Create a table
+
+```go
+_, err := conn.Exec(ctx, "CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))")
+```
+
 Insert a vector
 
 ```go
@@ -55,6 +67,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](pgx_test.go)
 
 ## pg
+
+Enable the extension
+
+```go
+_, err := db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
+```
 
 Add a vector column
 
@@ -91,6 +109,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](pg_test.go)
 
 ## Bun
+
+Enable the extension
+
+```go
+_, err := db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
+```
 
 Add a vector column
 
