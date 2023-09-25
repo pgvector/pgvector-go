@@ -35,20 +35,16 @@ func TestEnt(t *testing.T) {
 		panic(err)
 	}
 
-	embedding1 := pgvector.NewVector([]float32{1, 1, 1})
-	_, err = client.Item.Create().SetEmbedding(embedding1).Save(ctx)
+	embedding := pgvector.NewVector([]float32{1, 1, 1})
+	_, err = client.Item.Create().SetEmbedding(embedding).Save(ctx)
 	if err != nil {
 		panic(err)
 	}
 
-	embedding2 := pgvector.NewVector([]float32{2, 2, 2})
-	_, err = client.Item.Create().SetEmbedding(embedding2).Save(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	embedding3 := pgvector.NewVector([]float32{1, 1, 2})
-	_, err = client.Item.Create().SetEmbedding(embedding3).Save(ctx)
+	_, err = client.Item.CreateBulk(
+		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{2, 2, 2})),
+		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{1, 1, 2})),
+	).Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +52,7 @@ func TestEnt(t *testing.T) {
 	items, err := client.Item.
 		Query().
 		Order(func(s *sql.Selector) {
-			s.OrderExpr(sql.ExprP("embedding <-> $1", embedding1))
+			s.OrderExpr(sql.ExprP("embedding <-> $1", embedding))
 		}).
 		Limit(5).
 		All(ctx)
