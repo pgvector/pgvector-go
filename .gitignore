@@ -1,1 +1,5 @@
 /go.sum
+/ent/*
+!/ent/ent_test.go
+!/ent/generate.go
+!/ent/schema
