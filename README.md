@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for Go
 
-Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), and [Bun](https://github.com/uptrace/bun)
+Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), [Bun](https://github.com/uptrace/bun), and [Ent](https://github.com/ent/ent)
 
 [![Build Status](https://github.com/pgvector/pgvector-go/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-go/actions)
 
@@ -25,6 +25,7 @@ And follow the instructions for your database library:
 - [pgx](#pgx)
 - [pg](#pg)
 - [Bun](#bun)
+- [Ent](#ent)
 
 Or check out an example:
 
@@ -163,6 +164,48 @@ func (*Item) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuery) 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 See a [full example](bun_test.go)
+
+## Ent
+
+Enable the extension (requires the [sql/execquery](https://entgo.io/docs/feature-flags/#sql-raw-api) feature)
+
+```go
+_, err := client.ExecContext(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
+```
+
+Add a vector column
+
+```go
+func (Item) Fields() []ent.Field {
+    return []ent.Field{
+        field.Other("embedding", pgvector.Vector{}).
+            SchemaType(map[string]string{
+                dialect.Postgres: "vector(3)",
+        }),
+    }
+}
+```
+
+Insert a vector
+
+```go
+_, err := client.Item.
+    Create().
+    SetEmbedding(pgvector.NewVector([]float32{1, 2, 3})).
+    Save(ctx)
+```
+
+Get the nearest neighbors to a vector
+
+```go
+items, err := client.Item.
+    Query().
+    Order(func(s *sql.Selector) {
+        s.OrderExpr(sql.ExprP("embedding <-> $1", embedding))
+    }).
+    Limit(5).
+    All(ctx)
+```
 
 ## Contributing
 
