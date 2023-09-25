@@ -1,4 +1,4 @@
-package pgvector
+package pgvector_test
 
 import (
 	"bytes"
@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/pgvector/pgvector-go"
 )
 
 type apiRequest struct {
@@ -105,7 +106,7 @@ func TestOpenAI(t *testing.T) {
 	}
 
 	for i, content := range input {
-		_, err := conn.Exec(ctx, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", content, NewVector(embeddings[i]))
+		_, err := conn.Exec(ctx, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", content, pgvector.NewVector(embeddings[i]))
 		if err != nil {
 			panic(err)
 		}

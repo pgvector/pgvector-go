@@ -20,4 +20,4 @@ jobs:
           make
           sudo make install
       - run: go generate ./ent && go mod tidy
-      - run: go test ./...
+      - run: go test -v

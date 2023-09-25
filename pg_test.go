@@ -1,4 +1,4 @@
-package pgvector
+package pgvector_test
 
 import (
 	"math"
@@ -8,20 +8,21 @@ import (
 
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
+	"github.com/pgvector/pgvector-go"
 )
 
 type PgItem struct {
 	tableName struct{} `pg:"pg_items"`
 
 	Id        int64
-	Embedding Vector `pg:"type:vector(3)"`
+	Embedding pgvector.Vector `pg:"type:vector(3)"`
 }
 
 func CreatePgItems(db *pg.DB) {
 	items := []PgItem{
-		PgItem{Embedding: NewVector([]float32{1, 1, 1})},
-		PgItem{Embedding: NewVector([]float32{2, 2, 2})},
-		PgItem{Embedding: NewVector([]float32{1, 1, 2})},
+		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 1})},
+		PgItem{Embedding: pgvector.NewVector([]float32{2, 2, 2})},
+		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 2})},
 	}
 
 	for _, item := range items {
@@ -55,7 +56,7 @@ func TestPg(t *testing.T) {
 	CreatePgItems(db)
 
 	var items []PgItem
-	err = db.Model(&items).OrderExpr("embedding <-> ?", NewVector([]float32{1, 1, 1})).Limit(5).Select()
+	err = db.Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 1, 1})).Limit(5).Select()
 	if err != nil {
 		panic(err)
 	}
@@ -67,7 +68,7 @@ func TestPg(t *testing.T) {
 	}
 
 	var distances []float64
-	err = db.Model(&items).ColumnExpr("embedding <-> ?", NewVector([]float32{1, 1, 1})).Order("id").Select(&distances)
+	err = db.Model(&items).ColumnExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 1, 1})).Order("id").Select(&distances)
 	if err != nil {
 		panic(err)
 	}

@@ -1,4 +1,4 @@
-package ent
+package pgvector_test
 
 import (
 	"context"
@@ -8,12 +8,13 @@ import (
 	"entgo.io/ent/dialect/sql"
 	_ "github.com/lib/pq"
 	"github.com/pgvector/pgvector-go"
+	"github.com/pgvector/pgvector-go/ent"
 )
 
 func TestEnt(t *testing.T) {
 	ctx := context.Background()
 
-	client, err := Open("postgres", "postgres://localhost/pgvector_go_test?sslmode=disable")
+	client, err := ent.Open("postgres", "postgres://localhost/pgvector_go_test?sslmode=disable")
 	if err != nil {
 		panic(err)
 	}

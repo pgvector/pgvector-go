@@ -1,4 +1,4 @@
-package pgvector
+package pgvector_test
 
 import (
 	"context"
@@ -7,18 +7,19 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/pgvector/pgvector-go"
 )
 
 type PgxItem struct {
 	Id        int64
-	Embedding Vector
+	Embedding pgvector.Vector
 }
 
 func CreatePgxItems(conn *pgx.Conn, ctx context.Context) {
 	items := []PgxItem{
-		PgxItem{Embedding: NewVector([]float32{1, 1, 1})},
-		PgxItem{Embedding: NewVector([]float32{2, 2, 2})},
-		PgxItem{Embedding: NewVector([]float32{1, 1, 2})},
+		PgxItem{Embedding: pgvector.NewVector([]float32{1, 1, 1})},
+		PgxItem{Embedding: pgvector.NewVector([]float32{2, 2, 2})},
+		PgxItem{Embedding: pgvector.NewVector([]float32{1, 1, 2})},
 	}
 
 	for _, item := range items {
@@ -53,7 +54,7 @@ func TestPgx(t *testing.T) {
 
 	CreatePgxItems(conn, ctx)
 
-	rows, err := conn.Query(ctx, "SELECT *, embedding <-> $1 FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", NewVector([]float32{1, 1, 1}))
+	rows, err := conn.Query(ctx, "SELECT *, embedding <-> $1 FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 1, 1}))
 	if err != nil {
 		panic(err)
 	}

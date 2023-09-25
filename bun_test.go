@@ -1,4 +1,4 @@
-package pgvector
+package pgvector_test
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/pgvector/pgvector-go"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
@@ -16,8 +17,8 @@ import (
 type BunItem struct {
 	bun.BaseModel `bun:"table:bun_items"`
 
-	Id        int64  `bun:",pk,autoincrement"`
-	Embedding Vector `bun:"type:vector(3)"`
+	Id        int64           `bun:",pk,autoincrement"`
+	Embedding pgvector.Vector `bun:"type:vector(3)"`
 }
 
 var _ bun.AfterCreateTableHook = (*BunItem)(nil)
@@ -34,9 +35,9 @@ func (*BunItem) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuer
 
 func CreateBunItems(db *bun.DB, ctx context.Context) {
 	items := []BunItem{
-		BunItem{Embedding: NewVector([]float32{1, 1, 1})},
-		BunItem{Embedding: NewVector([]float32{2, 2, 2})},
-		BunItem{Embedding: NewVector([]float32{1, 1, 2})},
+		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 1})},
+		BunItem{Embedding: pgvector.NewVector([]float32{2, 2, 2})},
+		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 2})},
 	}
 
 	_, err := db.NewInsert().Model(&items).Exec(ctx)
@@ -67,7 +68,7 @@ func TestBun(t *testing.T) {
 	CreateBunItems(db, ctx)
 
 	var items []BunItem
-	err = db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", NewVector([]float32{1, 1, 1})).Limit(5).Scan(ctx)
+	err = db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 1, 1})).Limit(5).Scan(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -79,7 +80,7 @@ func TestBun(t *testing.T) {
 	}
 
 	var distances []float64
-	err = db.NewSelect().Model(&items).ColumnExpr("embedding <-> ?", NewVector([]float32{1, 1, 1})).Order("id").Scan(ctx, &distances)
+	err = db.NewSelect().Model(&items).ColumnExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 1, 1})).Order("id").Scan(ctx, &distances)
 	if err != nil {
 		panic(err)
 	}
