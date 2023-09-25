@@ -201,7 +201,7 @@ Get the nearest neighbors to a vector
 items, err := client.Item.
     Query().
     Order(func(s *sql.Selector) {
-        s.OrderExpr(sql.ExprP("embedding <-> $1", embedding))
+        s.OrderExpr(sql.ExprP("embedding <-> $1", pgvector.NewVector([]float32{1, 2, 3})))
     }).
     Limit(5).
     All(ctx)
