@@ -19,4 +19,5 @@ jobs:
           cd pgvector
           make
           sudo make install
+      - run: go generate ./ent
       - run: go test ./...

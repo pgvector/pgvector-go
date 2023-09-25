@@ -241,5 +241,6 @@ git clone https://github.com/pgvector/pgvector-go.git
 cd pgvector-go
 go mod tidy
 createdb pgvector_go_test
+go generate ./ent
 go test ./...
 ```
