@@ -207,6 +207,22 @@ items, err := client.Item.
     All(ctx)
 ```
 
+Add an approximate index
+
+```go
+func (Item) Indexes() []ent.Index {
+    return []ent.Index{
+        index.Fields("embedding").
+            Annotations(
+                entsql.IndexType("hnsw"),
+                entsql.OpClass("vector_l2_ops"),
+            ),
+    }
+}
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
 ## Contributing
 
 Everyone is encouraged to help improve this project. Here are a few ways you can help:
