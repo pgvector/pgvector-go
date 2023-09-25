@@ -8,18 +8,22 @@ import (
 	"strings"
 )
 
+// Vector is a wrapper for []float32 to implement sql.Scanner and driver.Valuer.
 type Vector struct {
 	vec []float32
 }
 
+// NewVector creates a new Vector from a slice of float32.
 func NewVector(vec []float32) Vector {
 	return Vector{vec: vec}
 }
 
+// Slice returns the underlying slice of float32.
 func (v Vector) Slice() []float32 {
 	return v.vec
 }
 
+// String returns a string representation of the vector.
 func (v Vector) String() string {
 	var buf strings.Builder
 	buf.WriteString("[")
@@ -35,6 +39,7 @@ func (v Vector) String() string {
 	return buf.String()
 }
 
+// Parse parses a string representation of a vector.
 func (v *Vector) Parse(s string) error {
 	v.vec = make([]float32, 0)
 	sp := strings.Split(s[1:len(s)-1], ",")
@@ -48,8 +53,10 @@ func (v *Vector) Parse(s string) error {
 	return nil
 }
 
+// statically assert that Vector implements sql.Scanner.
 var _ sql.Scanner = (*Vector)(nil)
 
+// Scan implements the sql.Scanner interface.
 func (v *Vector) Scan(src interface{}) (err error) {
 	switch src := src.(type) {
 	case []byte:
@@ -61,8 +68,10 @@ func (v *Vector) Scan(src interface{}) (err error) {
 	}
 }
 
+// statically assert that Vector implements driver.Valuer.
 var _ driver.Valuer = (*Vector)(nil)
 
+// Value implements the driver.Valuer interface.
 func (v Vector) Value() (driver.Value, error) {
 	return v.String(), nil
 }
