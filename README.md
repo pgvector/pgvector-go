@@ -223,7 +223,7 @@ func (Item) Indexes() []ent.Index {
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](ent/ent_test.go)
+See a [full example](ent_test.go)
 
 ## Contributing
 
