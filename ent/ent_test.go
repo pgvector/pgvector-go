@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/pgvector/pgvector-go"
 	_ "github.com/lib/pq"
+	"github.com/pgvector/pgvector-go"
 )
 
 func TestEnt(t *testing.T) {
@@ -53,12 +53,12 @@ func TestEnt(t *testing.T) {
 	}
 
 	items, err := client.Item.
-        Query().
-        Order(func(s *sql.Selector) {
-		  s.OrderExpr(sql.ExprP("embedding <-> $1", embedding1))
-	    }).
-        Limit(5).
-        All(ctx)
+		Query().
+		Order(func(s *sql.Selector) {
+			s.OrderExpr(sql.ExprP("embedding <-> $1", embedding1))
+		}).
+		Limit(5).
+		All(ctx)
 	if err != nil {
 		panic(err)
 	}
