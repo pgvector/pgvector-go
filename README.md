@@ -27,9 +27,10 @@ And follow the instructions for your database library:
 - [Bun](#bun)
 - [Ent](#ent)
 
-Or check out an example:
+Or check out some examples:
 
 - [Embeddings](openai_test.go) with OpenAI
+- [Recommendations](disco_test.go) with Disco
 
 ## pgx
 
