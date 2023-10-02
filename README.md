@@ -147,7 +147,8 @@ Get the nearest neighbors to a vector
 ```go
 var items []Item
 err := db.NewSelect().
-    Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).
+    Model(&items).
+    OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).
     Limit(5).
     Scan(ctx)
 ```
