@@ -99,7 +99,10 @@ Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err := db.Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).Limit(5).Select()
+err := db.Model(&items).
+    OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).
+    Limit(5).
+    Select()
 ```
 
 Add an approximate index
@@ -143,7 +146,10 @@ Get the nearest neighbors to a vector
 
 ```go
 var items []Item
-err := db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).Limit(5).Scan(ctx)
+err := db.NewSelect().
+    Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 2, 3})).
+    Limit(5).
+    Scan(ctx)
 ```
 
 Add an approximate index
