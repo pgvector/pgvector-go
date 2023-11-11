@@ -8,7 +8,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	_ "github.com/lib/pq"
 	"github.com/pgvector/pgvector-go"
-	"github.com/pgvector/pgvector-go/ent"
+	"github.com/pgvector/pgvector-go/third-party-tests/ent"
 )
 
 func TestEnt(t *testing.T) {

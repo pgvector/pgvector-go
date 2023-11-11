@@ -7,6 +7,7 @@ jobs:
       fail-fast: false
       matrix:
         go: ["1.21", "1.20"]
+        pgvector: ["v0.5.1", "master"]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -19,9 +20,12 @@ jobs:
           dev-files: true
       - run: |
           cd /tmp
-          git clone --branch v0.5.0 https://github.com/pgvector/pgvector.git
+          git clone --branch ${{ matrix.pgvector }} https://github.com/pgvector/pgvector.git
           cd pgvector
           make
           sudo make install
-      - run: go generate ./ent && go mod tidy
       - run: go test -v
+      - run: go generate ./ent && go mod tidy
+        working-directory: third-party-tests
+      - run: go test -v
+        working-directory: third-party-tests
