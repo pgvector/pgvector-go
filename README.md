@@ -233,6 +233,10 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 
 See a [full example](ent_test.go)
 
+## History
+
+View the [changelog](https://github.com/pgvector/pgvector-go/blob/master/CHANGELOG.md)
+
 ## Contributing
 
 Everyone is encouraged to help improve this project. Here are a few ways you can help:
