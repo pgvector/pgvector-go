@@ -189,7 +189,7 @@ func (Item) Fields() []ent.Field {
         field.Other("embedding", pgvector.Vector{}).
             SchemaType(map[string]string{
                 dialect.Postgres: "vector(3)",
-        }),
+            }),
     }
 }
 ```
