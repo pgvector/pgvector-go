@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for Go
 
-Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), [Bun](https://github.com/uptrace/bun), [Ent](https://github.com/ent/ent), and [GORM](https://github.com/go-gorm/gorm)
+Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), [Bun](https://github.com/uptrace/bun), [Ent](https://github.com/ent/ent), [GORM](https://github.com/go-gorm/gorm), and [sqlx](https://github.com/jmoiron/sqlx)
 
 [![Build Status](https://github.com/pgvector/pgvector-go/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-go/actions)
 
@@ -27,6 +27,7 @@ And follow the instructions for your database library:
 - [Bun](#bun)
 - [Ent](#ent)
 - [GORM](#gorm)
+- [sqlx](#sqlx)
 
 Or check out some examples:
 
@@ -279,6 +280,50 @@ db.Exec("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 See a [full example](gorm_test.go)
+
+## sqlx
+
+Enable the extension
+
+```go
+db.MustExec("CREATE EXTENSION IF NOT EXISTS vector")
+```
+
+Add a vector column
+
+```go
+type Item struct {
+    Embedding pgvector.Vector
+}
+```
+
+Insert a vector
+
+```go
+item := Item{
+    Embedding: pgvector.NewVector([]float32{1, 2, 3}),
+}
+_, err := db.NamedExec(`INSERT INTO items (embedding) VALUES (:embedding)`, item)
+```
+
+Get the nearest neighbors to a vector
+
+```go
+var items []Item
+db.Select(&items, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 1, 1}))
+```
+
+Add an approximate index
+
+```go
+db.MustExec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
+// or
+db.MustExec("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
+See a [full example](sqlx_test.go)
 
 ## History
 
