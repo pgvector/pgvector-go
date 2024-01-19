@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for Go
 
-Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), [Bun](https://github.com/uptrace/bun), and [Ent](https://github.com/ent/ent)
+Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), [Bun](https://github.com/uptrace/bun), [Ent](https://github.com/ent/ent), and [GORM](https://github.com/go-gorm/gorm)
 
 [![Build Status](https://github.com/pgvector/pgvector-go/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-go/actions)
 
@@ -26,6 +26,7 @@ And follow the instructions for your database library:
 - [pg](#pg)
 - [Bun](#bun)
 - [Ent](#ent)
+- [GORM](#gorm)
 
 Or check out some examples:
 
@@ -232,6 +233,42 @@ func (Item) Indexes() []ent.Index {
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 See a [full example](ent_test.go)
+
+## GORM
+
+Enable the extension
+
+```go
+db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
+```
+
+Add a vector column
+
+```go
+type Item struct {
+    Embedding pgvector.Vector `gorm:"type:vector(3)"`
+}
+```
+
+Insert a vector
+
+```go
+item := Item{
+    Embedding: pgvector.NewVector([]float32{1, 2, 3}),
+}
+result := db.Create(&item)
+```
+
+Get the nearest neighbors to a vector
+
+```go
+var items []Item
+db.Clauses(clause.OrderBy{
+    Expression: clause.Expr{SQL: "embedding <-> ?", Vars: []interface{}{pgvector.NewVector([]float32{1, 1, 1})}},
+}).Limit(5).Find(&items)
+```
+
+See a [full example](gorm_test.go)
 
 ## History
 
