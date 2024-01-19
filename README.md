@@ -268,6 +268,16 @@ db.Clauses(clause.OrderBy{
 }).Limit(5).Find(&items)
 ```
 
+Add an approximate index
+
+```go
+db.Exec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
+// or
+db.Exec("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
 See a [full example](gorm_test.go)
 
 ## History

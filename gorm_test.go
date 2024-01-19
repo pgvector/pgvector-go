@@ -41,6 +41,8 @@ func TestGorm(t *testing.T) {
 
 	db.AutoMigrate(&GormItem{})
 
+	db.Exec("CREATE INDEX ON gorm_items USING hnsw (embedding vector_l2_ops)")
+
 	CreateGormItems(db)
 
 	var items []GormItem
