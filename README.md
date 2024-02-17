@@ -4,7 +4,7 @@
 
 Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), [Bun](https://github.com/uptrace/bun), [Ent](https://github.com/ent/ent), [GORM](https://github.com/go-gorm/gorm), and [sqlx](https://github.com/jmoiron/sqlx)
 
-[![Build Status](https://github.com/pgvector/pgvector-go/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-go/actions)
+[![Build Status](https://github.com/pgvector/pgvector-go/actions/workflows/build.yml/badge.svg)](https://github.com/pgvector/pgvector-go/actions)
 
 ## Getting Started
 
