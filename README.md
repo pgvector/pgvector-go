@@ -63,9 +63,9 @@ rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY embedding <-> $1 LIM
 Add an approximate index
 
 ```go
-_, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
-// or
 _, err := conn.Exec(ctx, "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
+// or
+_, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
@@ -110,9 +110,9 @@ err := db.Model(&items).
 Add an approximate index
 
 ```go
-_, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
-// or
 _, err := conn.Exec(ctx, "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
+// or
+_, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
@@ -272,9 +272,9 @@ db.Clauses(clause.OrderBy{
 Add an approximate index
 
 ```go
-db.Exec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
-// or
 db.Exec("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
+// or
+db.Exec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
@@ -316,9 +316,9 @@ db.Select(&items, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", pgvec
 Add an approximate index
 
 ```go
-db.MustExec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
-// or
 db.MustExec("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
+// or
+db.MustExec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
