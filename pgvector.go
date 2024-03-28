@@ -41,8 +41,8 @@ func (v Vector) String() string {
 
 // Parse parses a string representation of a vector.
 func (v *Vector) Parse(s string) error {
-	v.vec = make([]float32, 0)
 	sp := strings.Split(s[1:len(s)-1], ",")
+	v.vec = make([]float32, 0, len(sp))
 	for i := 0; i < len(sp); i++ {
 		n, err := strconv.ParseFloat(sp[i], 32)
 		if err != nil {
