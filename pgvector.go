@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"unsafe"
 )
 
 // Vector is a wrapper for []float32 to implement sql.Scanner and driver.Valuer.
@@ -25,18 +26,20 @@ func (v Vector) Slice() []float32 {
 
 // String returns a string representation of the vector.
 func (v Vector) String() string {
-	var buf strings.Builder
-	buf.WriteString("[")
+	if len(v.vec) == 0 {
+		return "[]"
+	}
+	// brackets (2) + commas (len(v.vec)-1) + floats (len(v.vec))
+	buf := make([]byte, 0, 2+2*len(v.vec)-1)
+	buf = append(buf, '[')
 
 	for i := 0; i < len(v.vec); i++ {
-		if i > 0 {
-			buf.WriteString(",")
-		}
-		buf.WriteString(strconv.FormatFloat(float64(v.vec[i]), 'f', -1, 32))
+		buf = strconv.AppendFloat(buf, float64(v.vec[i]), 'f', -1, 32)
+		buf = append(buf, ',')
 	}
 
-	buf.WriteString("]")
-	return buf.String()
+	buf[len(buf)-1] = ']'
+	return unsafe.String(unsafe.SliceData(buf), len(buf))
 }
 
 // Parse parses a string representation of a vector.
