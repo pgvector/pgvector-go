@@ -1,3 +1,7 @@
+## 0.1.2 (unreleased)
+
+- Improved performance of serialization
+
 ## 0.1.1 (2023-04-20)
 
 - Fixed `Scan` for pgx
