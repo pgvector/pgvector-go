@@ -25,24 +25,24 @@ func (v Vector) Slice() []float32 {
 
 // String returns a string representation of the vector.
 func (v Vector) String() string {
-	var buf strings.Builder
-	buf.WriteString("[")
+	buf := make([]byte, 0, 2+16*len(v.vec))
+	buf = append(buf, '[')
 
 	for i := 0; i < len(v.vec); i++ {
 		if i > 0 {
-			buf.WriteString(",")
+			buf = append(buf, ',')
 		}
-		buf.WriteString(strconv.FormatFloat(float64(v.vec[i]), 'f', -1, 32))
+		buf = strconv.AppendFloat(buf, float64(v.vec[i]), 'f', -1, 32)
 	}
 
-	buf.WriteString("]")
-	return buf.String()
+	buf = append(buf, ']')
+	return string(buf)
 }
 
 // Parse parses a string representation of a vector.
 func (v *Vector) Parse(s string) error {
-	v.vec = make([]float32, 0)
 	sp := strings.Split(s[1:len(s)-1], ",")
+	v.vec = make([]float32, 0, len(sp))
 	for i := 0; i < len(sp); i++ {
 		n, err := strconv.ParseFloat(sp[i], 32)
 		if err != nil {
