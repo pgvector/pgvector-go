@@ -1,6 +1,7 @@
-## 0.1.2 (unreleased)
+## 0.2.0 (unreleased)
 
 - Improved performance of serialization
+- Dropped support for Go < 1.21
 
 ## 0.1.1 (2023-04-20)
 
