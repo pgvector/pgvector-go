@@ -15,16 +15,17 @@ type PgItem struct {
 	tableName struct{} `pg:"pg_items"`
 
 	Id              int64
-	Embedding       pgvector.Vector     `pg:"type:vector(3)"`
-	HalfEmbedding   pgvector.HalfVector `pg:"type:halfvec(3)"`
-	BinaryEmbedding string              `pg:"type:bit(3)"`
+	Embedding       pgvector.Vector       `pg:"type:vector(3)"`
+	HalfEmbedding   pgvector.HalfVector   `pg:"type:halfvec(3)"`
+	BinaryEmbedding string                `pg:"type:bit(3)"`
+	SparseEmbedding pgvector.SparseVector `pg:"type:sparsevec(3)"`
 }
 
 func CreatePgItems(db *pg.DB) {
 	items := []PgItem{
-		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000"},
-		PgItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101"},
-		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), BinaryEmbedding: "111"},
+		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
+		PgItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101", SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
+		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), BinaryEmbedding: "111", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
 	}
 
 	for _, item := range items {
