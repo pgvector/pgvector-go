@@ -53,7 +53,7 @@ func (v *HalfVector) Parse(s string) error {
 	return nil
 }
 
-// statically assert that Vector implements sql.Scanner.
+// statically assert that HalfVector implements sql.Scanner.
 var _ sql.Scanner = (*HalfVector)(nil)
 
 // Scan implements the sql.Scanner interface.
