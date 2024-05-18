@@ -1,5 +1,6 @@
 ## 0.2.0 (unreleased)
 
+- Added support for `halfvec` type
 - Improved performance of serialization
 - Dropped support for Go < 1.21
 
