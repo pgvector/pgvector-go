@@ -37,15 +37,16 @@ func TestEnt(t *testing.T) {
 
 	embedding := pgvector.NewVector([]float32{1, 1, 1})
 	halfEmbedding := pgvector.NewHalfVector([]float32{1, 1, 1})
+	binaryEmbedding := "000"
 	sparseEmbedding := pgvector.NewSparseVector([]float32{1, 1, 1})
-	_, err = client.Item.Create().SetEmbedding(embedding).SetHalfEmbedding(halfEmbedding).SetSparseEmbedding(sparseEmbedding).Save(ctx)
+	_, err = client.Item.Create().SetEmbedding(embedding).SetHalfEmbedding(halfEmbedding).SetBinaryEmbedding(binaryEmbedding).SetSparseEmbedding(sparseEmbedding).Save(ctx)
 	if err != nil {
 		panic(err)
 	}
 
 	_, err = client.Item.CreateBulk(
-		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{2, 2, 2})).SetHalfEmbedding(pgvector.NewHalfVector([]float32{2, 2, 2})).SetSparseEmbedding(pgvector.NewSparseVector([]float32{2, 2, 2})),
-		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{1, 1, 2})).SetHalfEmbedding(pgvector.NewHalfVector([]float32{1, 1, 2})).SetSparseEmbedding(pgvector.NewSparseVector([]float32{2, 2, 2})),
+		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{2, 2, 2})).SetHalfEmbedding(pgvector.NewHalfVector([]float32{2, 2, 2})).SetBinaryEmbedding("101").SetSparseEmbedding(pgvector.NewSparseVector([]float32{2, 2, 2})),
+		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{1, 1, 2})).SetHalfEmbedding(pgvector.NewHalfVector([]float32{1, 1, 2})).SetBinaryEmbedding("111").SetSparseEmbedding(pgvector.NewSparseVector([]float32{2, 2, 2})),
 	).Save(ctx)
 	if err != nil {
 		panic(err)
