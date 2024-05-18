@@ -14,10 +14,10 @@ import (
 type PgItem struct {
 	tableName struct{} `pg:"pg_items"`
 
-	Id        int64
-	Embedding pgvector.Vector `pg:"type:vector(3)"`
-	HalfEmbedding pgvector.HalfVector `pg:"type:halfvec(3)"`
-	BinaryEmbedding string `pg:"type:bit(3)"`
+	Id              int64
+	Embedding       pgvector.Vector     `pg:"type:vector(3)"`
+	HalfEmbedding   pgvector.HalfVector `pg:"type:halfvec(3)"`
+	BinaryEmbedding string              `pg:"type:bit(3)"`
 }
 
 func CreatePgItems(db *pg.DB) {
