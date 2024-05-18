@@ -10,18 +10,20 @@ import (
 )
 
 type SqlxItem struct {
-	Id        int64
-	Embedding pgvector.Vector
+	Id              int64
+	Embedding       pgvector.Vector
+	HalfEmbedding   pgvector.HalfVector
+	SparseEmbedding pgvector.SparseVector
 }
 
 func CreateSqlxItems(db *sqlx.DB) {
 	items := []SqlxItem{
-		SqlxItem{Embedding: pgvector.NewVector([]float32{1, 1, 1})},
-		SqlxItem{Embedding: pgvector.NewVector([]float32{2, 2, 2})},
-		SqlxItem{Embedding: pgvector.NewVector([]float32{1, 1, 2})},
+		SqlxItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
+		SqlxItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
+		SqlxItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
 	}
 
-	_, err := db.NamedExec(`INSERT INTO sqlx_items (embedding) VALUES (:embedding)`, items)
+	_, err := db.NamedExec(`INSERT INTO sqlx_items (embedding, halfembedding, sparseembedding) VALUES (:embedding, :halfembedding, :sparseembedding)`, items)
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +35,7 @@ func TestSqlx(t *testing.T) {
 	db.MustExec("CREATE EXTENSION IF NOT EXISTS vector")
 	db.MustExec("DROP TABLE IF EXISTS sqlx_items")
 
-	db.MustExec("CREATE TABLE sqlx_items (id bigserial PRIMARY KEY, embedding vector(3))")
+	db.MustExec("CREATE TABLE sqlx_items (id bigserial PRIMARY KEY, embedding vector(3), halfembedding halfvec(3), sparseembedding sparsevec(3))")
 
 	db.MustExec("CREATE INDEX ON sqlx_items USING hnsw (embedding vector_l2_ops)")
 
@@ -46,5 +48,8 @@ func TestSqlx(t *testing.T) {
 	}
 	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad embedding")
+	}
+	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Errorf("Bad half embedding")
 	}
 }
