@@ -21,6 +21,10 @@ func (Item) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.Postgres: "vector(3)",
 			}),
+		field.Other("half_embedding", pgvector.HalfVector{}).
+			SchemaType(map[string]string{
+				dialect.Postgres: "halfvec(3)",
+			}),
 	}
 }
 
