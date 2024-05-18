@@ -17,13 +17,14 @@ type PgItem struct {
 	Id        int64
 	Embedding pgvector.Vector `pg:"type:vector(3)"`
 	HalfEmbedding pgvector.HalfVector `pg:"type:halfvec(3)"`
+	BinaryEmbedding string `pg:"type:bit(3)"`
 }
 
 func CreatePgItems(db *pg.DB) {
 	items := []PgItem{
-		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1})},
-		PgItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2})},
-		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2})},
+		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000"},
+		PgItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101"},
+		PgItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), BinaryEmbedding: "111"},
 	}
 
 	for _, item := range items {
@@ -69,6 +70,9 @@ func TestPg(t *testing.T) {
 	}
 	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad half embedding")
+	}
+	if items[0].BinaryEmbedding != "000" || items[1].BinaryEmbedding != "111" || items[2].BinaryEmbedding != "101" {
+		t.Errorf("Bad binary embeddings")
 	}
 
 	var distances []float64
