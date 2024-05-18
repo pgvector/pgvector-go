@@ -20,6 +20,7 @@ type BunItem struct {
 	Id              int64                 `bun:",pk,autoincrement"`
 	Embedding       pgvector.Vector       `bun:"type:vector(3)"`
 	HalfEmbedding   pgvector.HalfVector   `bun:"type:halfvec(3)"`
+	BinaryEmbedding string                `bun:"type:bit(3)"`
 	SparseEmbedding pgvector.SparseVector `bun:"type:sparsevec(3)"`
 }
 
@@ -37,9 +38,9 @@ func (*BunItem) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuer
 
 func CreateBunItems(db *bun.DB, ctx context.Context) {
 	items := []BunItem{
-		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
-		BunItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
-		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
+		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
+		BunItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101", SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
+		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), BinaryEmbedding: "111", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
 	}
 
 	_, err := db.NewInsert().Model(&items).Exec(ctx)
@@ -82,6 +83,9 @@ func TestBun(t *testing.T) {
 	}
 	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad half embedding")
+	}
+	if items[0].BinaryEmbedding != "000" || items[1].BinaryEmbedding != "111" || items[2].BinaryEmbedding != "101" {
+		t.Errorf("Bad binary embeddings")
 	}
 
 	var distances []float64
