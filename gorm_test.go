@@ -13,14 +13,16 @@ import (
 
 type GormItem struct {
 	gorm.Model
-	Embedding pgvector.Vector `gorm:"type:vector(3)"`
+	Embedding       pgvector.Vector       `gorm:"type:vector(3)"`
+	HalfEmbedding   pgvector.HalfVector   `gorm:"type:halfvec(3)"`
+	SparseEmbedding pgvector.SparseVector `gorm:"type:sparsevec(3)"`
 }
 
 func CreateGormItems(db *gorm.DB) {
 	items := []GormItem{
-		GormItem{Embedding: pgvector.NewVector([]float32{1, 1, 1})},
-		GormItem{Embedding: pgvector.NewVector([]float32{2, 2, 2})},
-		GormItem{Embedding: pgvector.NewVector([]float32{1, 1, 2})},
+		GormItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
+		GormItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
+		GormItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
 	}
 
 	result := db.Create(items)
@@ -54,6 +56,9 @@ func TestGorm(t *testing.T) {
 	}
 	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad embedding")
+	}
+	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Errorf("Bad half embedding")
 	}
 
 	var distances []float64
