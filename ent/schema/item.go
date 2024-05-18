@@ -25,6 +25,10 @@ func (Item) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.Postgres: "halfvec(3)",
 			}),
+		field.Other("sparse_embedding", pgvector.SparseVector{}).
+			SchemaType(map[string]string{
+				dialect.Postgres: "sparsevec(3)",
+			}),
 	}
 }
 
