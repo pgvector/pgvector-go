@@ -23,6 +23,17 @@ func TestVectorString(t *testing.T) {
 	}
 }
 
+func TestVectorParse(t *testing.T) {
+	var vec pgvector.Vector
+	err := vec.Parse("[1,2,3]")
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
+		t.Errorf("Bad parse")
+	}
+}
+
 func TestVectorMarshal(t *testing.T) {
 	vec := pgvector.NewVector([]float32{1, 2, 3})
 	data, err := json.Marshal(vec)
