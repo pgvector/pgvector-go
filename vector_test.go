@@ -9,17 +9,17 @@ import (
 	"github.com/pgvector/pgvector-go"
 )
 
-func TestVectorString(t *testing.T) {
-	vec := pgvector.NewVector([]float32{1, 2, 3})
-	if fmt.Sprint(vec) != "[1,2,3]" {
-		t.Errorf("Bad string")
-	}
-}
-
 func TestVectorSlice(t *testing.T) {
 	vec := pgvector.NewVector([]float32{1, 2, 3})
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
 		t.Errorf("Bad slice")
+	}
+}
+
+func TestVectorString(t *testing.T) {
+	vec := pgvector.NewVector([]float32{1, 2, 3})
+	if fmt.Sprint(vec) != "[1,2,3]" {
+		t.Errorf("Bad string")
 	}
 }
 
