@@ -2,11 +2,19 @@ package pgvector_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"testing"
 
 	"github.com/pgvector/pgvector-go"
 )
+
+func TestVectorString(t *testing.T) {
+	vec := pgvector.NewVector([]float32{1, 2, 3})
+	if fmt.Sprint(vec) != "[1,2,3]" {
+		t.Errorf("Bad marshal")
+	}
+}
 
 func TestVectorMarshal(t *testing.T) {
 	vec := pgvector.NewVector([]float32{1, 2, 3})
