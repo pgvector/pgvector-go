@@ -12,14 +12,14 @@ import (
 func TestHalfVectorSlice(t *testing.T) {
 	vec := pgvector.NewHalfVector([]float32{1, 2, 3})
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
-		t.Errorf("Bad slice")
+		t.Error()
 	}
 }
 
 func TestHalfVectorString(t *testing.T) {
 	vec := pgvector.NewHalfVector([]float32{1, 2, 3})
 	if fmt.Sprint(vec) != "[1,2,3]" {
-		t.Errorf("Bad string")
+		t.Error()
 	}
 }
 
@@ -30,7 +30,7 @@ func TestHalfVectorParse(t *testing.T) {
 		panic(err)
 	}
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
-		t.Errorf("Bad parse")
+		t.Error()
 	}
 }
 
@@ -41,7 +41,7 @@ func TestHalfVectorMarshal(t *testing.T) {
 		panic(err)
 	}
 	if string(data) != "[1,2,3]" {
-		t.Errorf("Bad marshal")
+		t.Error()
 	}
 }
 
@@ -52,6 +52,6 @@ func TestHalfVectorUnmarshal(t *testing.T) {
 		panic(err)
 	}
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
-		t.Errorf("Bad unmarshal")
+		t.Error()
 	}
 }
