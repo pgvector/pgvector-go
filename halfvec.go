@@ -77,10 +77,16 @@ func (v HalfVector) Value() (driver.Value, error) {
 	return v.String(), nil
 }
 
+// statically assert that HalfVector implements json.Marshaler.
+var _ json.Marshaler = (*HalfVector)(nil)
+
 // MarshalJSON implements the json.Marshaler interface.
 func (v HalfVector) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.vec)
 }
+
+// statically assert that HalfVector implements json.Unmarshaler.
+var _ json.Unmarshaler = (*HalfVector)(nil)
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
 func (v *HalfVector) UnmarshalJSON(data []byte) error {
