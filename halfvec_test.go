@@ -14,14 +14,14 @@ func TestHalfVectorMarshal(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	if string(data) != `[1,2,3]` {
+	if string(data) != "[1,2,3]" {
 		t.Errorf("Bad marshal")
 	}
 }
 
 func TestHalfVectorUnmarshal(t *testing.T) {
 	var vec pgvector.HalfVector
-	err := json.Unmarshal([]byte(`[1,2,3]`), &vec)
+	err := json.Unmarshal([]byte("[1,2,3]"), &vec)
 	if err != nil {
 		panic(err)
 	}
