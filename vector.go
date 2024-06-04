@@ -3,6 +3,7 @@ package pgvector
 import (
 	"database/sql"
 	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -74,4 +75,14 @@ var _ driver.Valuer = (*Vector)(nil)
 // Value implements the driver.Valuer interface.
 func (v Vector) Value() (driver.Value, error) {
 	return v.String(), nil
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (v Vector) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.vec)
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface.
+func (v *Vector) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &v.vec)
 }

@@ -1,6 +1,7 @@
 ## 0.2.0 (unreleased)
 
 - Added support for `halfvec` and `sparsevec` types
+- Added support for JSON serialization
 - Improved performance of serialization
 - Dropped support for Go < 1.21
 
