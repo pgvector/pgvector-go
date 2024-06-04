@@ -8,6 +8,13 @@ import (
 	"github.com/pgvector/pgvector-go"
 )
 
+func TestNewSparseVectorFromMap(t *testing.T) {
+	vec := pgvector.NewSparseVectorFromMap(map[int32]float32{0: 1, 2: 2, 4: 3}, 6)
+	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
+		t.Errorf("Bad slice")
+	}
+}
+
 func TestSparseVectorSlice(t *testing.T) {
 	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
