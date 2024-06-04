@@ -12,7 +12,7 @@ import (
 func TestVectorString(t *testing.T) {
 	vec := pgvector.NewVector([]float32{1, 2, 3})
 	if fmt.Sprint(vec) != "[1,2,3]" {
-		t.Errorf("Bad marshal")
+		t.Errorf("Bad string")
 	}
 }
 

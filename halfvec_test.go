@@ -12,7 +12,7 @@ import (
 func TestHalfVectorString(t *testing.T) {
 	vec := pgvector.NewHalfVector([]float32{1, 2, 3})
 	if fmt.Sprint(vec) != "[1,2,3]" {
-		t.Errorf("Bad marshal")
+		t.Errorf("Bad string")
 	}
 }
 
