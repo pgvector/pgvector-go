@@ -16,6 +16,13 @@ func TestVectorString(t *testing.T) {
 	}
 }
 
+func TestVectorSlice(t *testing.T) {
+	vec := pgvector.NewVector([]float32{1, 2, 3})
+	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
+		t.Errorf("Bad slice")
+	}
+}
+
 func TestVectorMarshal(t *testing.T) {
 	vec := pgvector.NewVector([]float32{1, 2, 3})
 	data, err := json.Marshal(vec)
