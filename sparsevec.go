@@ -30,6 +30,15 @@ func NewSparseVector(vec []float32) SparseVector {
 	return SparseVector{dim: dim, indices: indices, values: values}
 }
 
+// Slice returns a slice of float32.
+func (v SparseVector) Slice() []float32 {
+	vec := make([]float32, v.dim)
+	for i := 0; i < len(v.indices); i++ {
+		vec[v.indices[i]] = v.values[i]
+	}
+	return vec
+}
+
 // String returns a string representation of the vector.
 func (v SparseVector) String() string {
 	buf := make([]byte, 0, 13+27*len(v.indices))
