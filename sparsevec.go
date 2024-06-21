@@ -42,6 +42,21 @@ func NewSparseVectorFromMap(elements map[int32]float32, dim int32) SparseVector 
 	return SparseVector{dim: dim, indices: indices, values: values}
 }
 
+// Dimensions returns the number of dimensions.
+func (v SparseVector) Dimensions() int32 {
+	return v.dim
+}
+
+// Indices returns the non-zero indices.
+func (v SparseVector) Indices() []int32 {
+	return v.indices
+}
+
+// Values returns the non-zero values.
+func (v SparseVector) Values() []float32 {
+	return v.values
+}
+
 // Slice returns a slice of float32.
 func (v SparseVector) Slice() []float32 {
 	vec := make([]float32, v.dim)

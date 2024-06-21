@@ -8,9 +8,37 @@ import (
 	"github.com/pgvector/pgvector-go"
 )
 
+func TestNewSparseVector(t *testing.T) {
+	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
+	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
+		t.Error()
+	}
+}
+
 func TestNewSparseVectorFromMap(t *testing.T) {
 	vec := pgvector.NewSparseVectorFromMap(map[int32]float32{0: 1, 2: 2, 4: 3}, 6)
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
+		t.Error()
+	}
+}
+
+func TestDimensions(t *testing.T) {
+	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
+	if vec.Dimensions() != 6 {
+		t.Error()
+	}
+}
+
+func TestIndices(t *testing.T) {
+	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
+	if !reflect.DeepEqual(vec.Indices(), []int32{0, 2, 4}) {
+		t.Error()
+	}
+}
+
+func TestValues(t *testing.T) {
+	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
+	if !reflect.DeepEqual(vec.Values(), []float32{1, 2, 3}) {
 		t.Error()
 	}
 }
