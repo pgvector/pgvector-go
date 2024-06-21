@@ -22,21 +22,21 @@ func TestNewSparseVectorFromMap(t *testing.T) {
 	}
 }
 
-func TestDimensions(t *testing.T) {
+func TestSparseVectorDimensions(t *testing.T) {
 	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
 	if vec.Dimensions() != 6 {
 		t.Error()
 	}
 }
 
-func TestIndices(t *testing.T) {
+func TestSparseVectorIndices(t *testing.T) {
 	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
 	if !reflect.DeepEqual(vec.Indices(), []int32{0, 2, 4}) {
 		t.Error()
 	}
 }
 
-func TestValues(t *testing.T) {
+func TestSparseVectorValues(t *testing.T) {
 	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
 	if !reflect.DeepEqual(vec.Values(), []float32{1, 2, 3}) {
 		t.Error()
