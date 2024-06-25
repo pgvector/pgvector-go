@@ -33,10 +33,12 @@ func NewSparseVector(vec []float32) SparseVector {
 func NewSparseVectorFromMap(elements map[int32]float32, dim int32) SparseVector {
 	indices := make([]int32, 0, len(elements))
 	values := make([]float32, 0, len(elements))
-	// no need to sort or remove zeros since binary format is not supported
+	// no need to sort since binary format is not supported
 	for k, v := range elements {
-		indices = append(indices, k)
-		values = append(values, v)
+		if v != 0 {
+			indices = append(indices, k)
+			values = append(values, v)
+		}
 	}
 	return SparseVector{dim: dim, indices: indices, values: values}
 }
