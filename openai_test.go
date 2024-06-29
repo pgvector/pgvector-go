@@ -22,7 +22,7 @@ func FetchEmbeddings(input []string, apiKey string) ([][]float32, error) {
 	url := "https://api.openai.com/v1/embeddings"
 	data := &apiRequest{
 		Input: input,
-		Model: "text-embedding-ada-002",
+		Model: "text-embedding-3-small",
 	}
 
 	b, err := json.Marshal(data)
