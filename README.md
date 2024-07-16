@@ -32,6 +32,7 @@ And follow the instructions for your database library:
 Or check out some examples:
 
 - [Embeddings](openai_test.go) with OpenAI
+- [Binary embeddings](cohere_test.go) with Cohere
 - [Recommendations](disco_test.go) with Disco
 
 ## pgx
