@@ -159,11 +159,11 @@ func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any)
 	return nil
 }
 
-func (c VectorCodec) DecodeDatabaseSQLValue(m *pgtype.Map, oid uint32, format int16, src []byte) (driver.Value, error) {
+func (VectorCodec) DecodeDatabaseSQLValue(m *pgtype.Map, oid uint32, format int16, src []byte) (driver.Value, error) {
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func (c VectorCodec) DecodeValue(m *pgtype.Map, oid uint32, format int16, src []byte) (any, error) {
+func (VectorCodec) DecodeValue(m *pgtype.Map, oid uint32, format int16, src []byte) (any, error) {
 	return nil, fmt.Errorf("Not implemented")
 }
 
