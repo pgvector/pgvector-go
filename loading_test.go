@@ -123,12 +123,14 @@ func TestLoading(t *testing.T) {
 		panic(err)
 	}
 
-	_, err = conn.Exec(ctx, "CREATE TABLE items (id bigserial, embedding vector(128))")
+	_, err = conn.Exec(ctx, fmt.Sprintf("CREATE TABLE items (id bigserial, embedding vector(%d))", dimensions))
 	if err != nil {
 		panic(err)
 	}
 
 	// load data
+
+	fmt.Printf("Loading %d rows\n", rows)
 
 	data := make([][]interface{}, 0, rows)
 	for _, embedding := range embeddings {
