@@ -14,71 +14,6 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type Vector struct {
-	vec []float32
-}
-
-type VectorCodec struct{}
-
-func (VectorCodec) FormatSupported(format int16) bool {
-	return format == pgx.BinaryFormatCode
-}
-
-func (VectorCodec) PreferredFormat() int16 {
-	return pgx.BinaryFormatCode
-}
-
-func (VectorCodec) PlanEncode(m *pgtype.Map, oid uint32, format int16, value any) pgtype.EncodePlan {
-	_, ok := value.(Vector)
-	if !ok {
-		return nil
-	}
-
-	switch format {
-	case pgx.BinaryFormatCode:
-		return encodePlanVectorCodecBinary{}
-	}
-
-	return nil
-}
-
-type encodePlanVectorCodecBinary struct{}
-
-func (encodePlanVectorCodecBinary) Encode(value any, buf []byte) (newBuf []byte, err error) {
-	v := value.(Vector)
-	buf = pgio.AppendInt16(buf, int16(len(v.vec)))
-	buf = pgio.AppendInt16(buf, 0)
-	for i := 0; i < len(v.vec); i++ {
-		buf = pgio.AppendUint32(buf, math.Float32bits(v.vec[i]))
-	}
-	return buf, nil
-}
-
-func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {
-	return nil
-}
-
-func (c VectorCodec) DecodeDatabaseSQLValue(m *pgtype.Map, oid uint32, format int16, src []byte) (driver.Value, error) {
-	return nil, fmt.Errorf("Not implemented")
-}
-
-func (c VectorCodec) DecodeValue(m *pgtype.Map, oid uint32, format int16, src []byte) (any, error) {
-	return nil, fmt.Errorf("Not implemented")
-}
-
-func RegisterType(conn *pgx.Conn) error {
-	name := "vector"
-	var oid uint32
-	err := conn.QueryRow(context.Background(), "SELECT oid FROM pg_type WHERE typname = $1", name).Scan(&oid)
-	if err != nil {
-		return err
-	}
-	codec := &VectorCodec{}
-	ty := &pgtype.Type{Name: name, OID: oid, Codec: codec}
-	conn.TypeMap().RegisterType(ty)
-	return nil
-}
-
 func TestLoading(t *testing.T) {
 	if os.Getenv("TEST_LOADING") == "" {
 		t.Skip("Skipping example")
@@ -178,4 +113,69 @@ func TestLoading(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+type Vector struct {
+	vec []float32
+}
+
+type VectorCodec struct{}
+
+func (VectorCodec) FormatSupported(format int16) bool {
+	return format == pgx.BinaryFormatCode
+}
+
+func (VectorCodec) PreferredFormat() int16 {
+	return pgx.BinaryFormatCode
+}
+
+func (VectorCodec) PlanEncode(m *pgtype.Map, oid uint32, format int16, value any) pgtype.EncodePlan {
+	_, ok := value.(Vector)
+	if !ok {
+		return nil
+	}
+
+	switch format {
+	case pgx.BinaryFormatCode:
+		return encodePlanVectorCodecBinary{}
+	}
+
+	return nil
+}
+
+type encodePlanVectorCodecBinary struct{}
+
+func (encodePlanVectorCodecBinary) Encode(value any, buf []byte) (newBuf []byte, err error) {
+	v := value.(Vector)
+	buf = pgio.AppendInt16(buf, int16(len(v.vec)))
+	buf = pgio.AppendInt16(buf, 0)
+	for i := 0; i < len(v.vec); i++ {
+		buf = pgio.AppendUint32(buf, math.Float32bits(v.vec[i]))
+	}
+	return buf, nil
+}
+
+func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {
+	return nil
+}
+
+func (c VectorCodec) DecodeDatabaseSQLValue(m *pgtype.Map, oid uint32, format int16, src []byte) (driver.Value, error) {
+	return nil, fmt.Errorf("Not implemented")
+}
+
+func (c VectorCodec) DecodeValue(m *pgtype.Map, oid uint32, format int16, src []byte) (any, error) {
+	return nil, fmt.Errorf("Not implemented")
+}
+
+func RegisterType(conn *pgx.Conn) error {
+	name := "vector"
+	var oid uint32
+	err := conn.QueryRow(context.Background(), "SELECT oid FROM pg_type WHERE typname = $1", name).Scan(&oid)
+	if err != nil {
+		return err
+	}
+	codec := &VectorCodec{}
+	ty := &pgtype.Type{Name: name, OID: oid, Codec: codec}
+	conn.TypeMap().RegisterType(ty)
+	return nil
 }
