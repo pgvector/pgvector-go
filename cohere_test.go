@@ -119,12 +119,12 @@ func TestCohere(t *testing.T) {
 	}
 
 	query := "forest"
-	queryEmbeddings, err := Embed([]string{query}, "search_query", apiKey)
+	queryEmbedding, err := Embed([]string{query}, "search_query", apiKey)
 	if err != nil {
 		panic(err)
 	}
 
-	rows, err := conn.Query(ctx, "SELECT id, content FROM documents ORDER BY embedding <~> $1 LIMIT 5", queryEmbeddings[0])
+	rows, err := conn.Query(ctx, "SELECT id, content FROM documents ORDER BY embedding <~> $1 LIMIT 5", queryEmbedding[0])
 	if err != nil {
 		panic(err)
 	}
