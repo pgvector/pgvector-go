@@ -34,6 +34,7 @@ Or check out some examples:
 - [Embeddings](openai_test.go) with OpenAI
 - [Binary embeddings](cohere_test.go) with Cohere
 - [Recommendations](disco_test.go) with Disco
+- [Bulk loading](loading_test.go) with `COPY`
 
 ## pgx
 

@@ -6,6 +6,8 @@ require (
 	entgo.io/ent v0.13.1
 	github.com/ankane/disco-go v0.1.0
 	github.com/go-pg/pg/v10 v10.11.0
+	github.com/jackc/pgio v1.0.0
+	github.com/jackc/pgtype v1.14.2
 	github.com/jackc/pgx/v5 v5.4.3
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.9
