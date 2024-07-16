@@ -132,22 +132,22 @@ func TestLoading(t *testing.T) {
 
 	fmt.Printf("Loading %d rows\n", rows)
 
-	data := make([][]interface{}, 0, rows)
-	for _, embedding := range embeddings {
-		data = append(data, []interface{}{Vector{vec: embedding}})
-	}
-
 	_, err = conn.CopyFrom(
 		ctx,
 		pgx.Identifier{"items"},
 		[]string{"embedding"},
-		pgx.CopyFromRows(data),
+		pgx.CopyFromSlice(len(embeddings), func(i int) ([]any, error) {
+			if i%10000 == 0 {
+				fmt.Printf(".")
+			}
+			return []interface{}{Vector{vec: embeddings[i]}}, nil
+		}),
 	)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Success!")
+	fmt.Println("\nSuccess!")
 
 	// create any indexes *after* loading initial data (skipping for this example)
 
