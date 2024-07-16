@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/jackc/pgx/v5"
@@ -61,12 +60,11 @@ func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
 
 	var embeddings []string
 	for _, item := range result["embeddings"].(map[string]interface{})["ubinary"].([]interface{}) {
-		var buf strings.Builder
-		buf.Grow(len(item.([]interface{})) * 8)
+		buf := make([]byte, 0, len(item.([]interface{}))*8)
 		for _, v := range item.([]interface{}) {
-			buf.WriteString(fmt.Sprintf("%08b", uint8(v.(float64))))
+			buf = fmt.Appendf(buf, "%08b", uint8(v.(float64)))
 		}
-		embedding := buf.String()
+		embedding := string(buf)
 		embeddings = append(embeddings, embedding)
 	}
 	return embeddings, nil
