@@ -135,8 +135,7 @@ func (VectorCodec) PlanEncode(m *pgtype.Map, oid uint32, format int16, value any
 		return nil
 	}
 
-	switch format {
-	case pgx.BinaryFormatCode:
+	if format == pgx.BinaryFormatCode {
 		return encodePlanVectorCodecBinary{}
 	}
 
