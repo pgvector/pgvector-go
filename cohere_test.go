@@ -62,7 +62,7 @@ func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
 	var embeddings []string
 	for _, item := range result["embeddings"].(map[string]interface{})["ubinary"].([]interface{}) {
 		var buf strings.Builder
-		buf.Grow(1024)
+		buf.Grow(len(item.([]interface{})) * 8)
 		for _, v := range item.([]interface{}) {
 			buf.WriteString(fmt.Sprintf("%08b", uint8(v.(float64))))
 		}
