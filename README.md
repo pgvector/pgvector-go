@@ -350,3 +350,9 @@ createdb pgvector_go_test
 go generate ./ent
 go test -v
 ```
+
+To run an example:
+
+```sh
+go test -v examples/loading_test.go
+```
