@@ -12,64 +12,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-type embedRequest struct {
-	Texts          []string `json:"texts"`
-	Model          string   `json:"model"`
-	InputType      string   `json:"input_type"`
-	EmbeddingTypes []string `json:"embedding_types"`
-}
-
-func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
-	url := "https://api.cohere.com/v1/embed"
-	data := &embedRequest{
-		Texts:          texts,
-		Model:          "embed-english-v3.0",
-		InputType:      inputType,
-		EmbeddingTypes: []string{"ubinary"},
-	}
-
-	b, err := json.Marshal(data)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(b))
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", apiKey))
-	req.Header.Add("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Bad status code: %d", resp.StatusCode)
-	}
-
-	var result map[string]interface{}
-	err = json.NewDecoder(resp.Body).Decode(&result)
-	if err != nil {
-		return nil, err
-	}
-
-	var embeddings []string
-	for _, item := range result["embeddings"].(map[string]interface{})["ubinary"].([]interface{}) {
-		buf := make([]byte, 0, len(item.([]interface{}))*8)
-		for _, v := range item.([]interface{}) {
-			buf = fmt.Appendf(buf, "%08b", uint8(v.(float64)))
-		}
-		embedding := string(buf)
-		embeddings = append(embeddings, embedding)
-	}
-	return embeddings, nil
-}
-
 func TestCohere(t *testing.T) {
 	apiKey := os.Getenv("CO_API_KEY")
 	if apiKey == "" {
@@ -141,4 +83,62 @@ func TestCohere(t *testing.T) {
 	if rows.Err() != nil {
 		panic(rows.Err())
 	}
+}
+
+type embedRequest struct {
+	Texts          []string `json:"texts"`
+	Model          string   `json:"model"`
+	InputType      string   `json:"input_type"`
+	EmbeddingTypes []string `json:"embedding_types"`
+}
+
+func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
+	url := "https://api.cohere.com/v1/embed"
+	data := &embedRequest{
+		Texts:          texts,
+		Model:          "embed-english-v3.0",
+		InputType:      inputType,
+		EmbeddingTypes: []string{"ubinary"},
+	}
+
+	b, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(b))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", apiKey))
+	req.Header.Add("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Bad status code: %d", resp.StatusCode)
+	}
+
+	var result map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+
+	var embeddings []string
+	for _, item := range result["embeddings"].(map[string]interface{})["ubinary"].([]interface{}) {
+		buf := make([]byte, 0, len(item.([]interface{}))*8)
+		for _, v := range item.([]interface{}) {
+			buf = fmt.Appendf(buf, "%08b", uint8(v.(float64)))
+		}
+		embedding := string(buf)
+		embeddings = append(embeddings, embedding)
+	}
+	return embeddings, nil
 }
