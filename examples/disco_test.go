@@ -3,7 +3,6 @@ package pgvector_test
 import (
 	"context"
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/ankane/disco-go"
@@ -12,10 +11,6 @@ import (
 )
 
 func TestDisco(t *testing.T) {
-	if os.Getenv("TEST_DISCO") == "" {
-		t.Skip("Skipping example")
-	}
-
 	ctx := context.Background()
 
 	conn, err := pgx.Connect(ctx, "postgres://localhost/pgvector_example")

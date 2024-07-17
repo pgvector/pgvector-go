@@ -69,7 +69,7 @@ func FetchEmbeddings(input []string, apiKey string) ([][]float32, error) {
 func TestOpenAI(t *testing.T) {
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
-		t.Skip("Skipping example")
+		t.Skip("Set OPENAI_API_KEY")
 	}
 
 	ctx := context.Background()

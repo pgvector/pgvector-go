@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"os"
 	"testing"
 
 	"github.com/jackc/pgio"
@@ -15,10 +14,6 @@ import (
 )
 
 func TestLoading(t *testing.T) {
-	if os.Getenv("TEST_LOADING") == "" {
-		t.Skip("Skipping example")
-	}
-
 	// generate random data
 
 	rows := 1000000

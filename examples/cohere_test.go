@@ -73,7 +73,7 @@ func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
 func TestCohere(t *testing.T) {
 	apiKey := os.Getenv("CO_API_KEY")
 	if apiKey == "" {
-		t.Skip("Skipping example")
+		t.Skip("Set CO_API_KEY")
 	}
 
 	ctx := context.Background()
