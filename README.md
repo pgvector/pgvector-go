@@ -31,10 +31,10 @@ And follow the instructions for your database library:
 
 Or check out some examples:
 
-- [Embeddings](openai_test.go) with OpenAI
-- [Binary embeddings](cohere_test.go) with Cohere
-- [Recommendations](disco_test.go) with Disco
-- [Bulk loading](loading_test.go) with `COPY`
+- [Embeddings](examples/openai_test.go) with OpenAI
+- [Binary embeddings](examples/cohere_test.go) with Cohere
+- [Recommendations](examples/disco_test.go) with Disco
+- [Bulk loading](examples/loading_test.go) with `COPY`
 
 ## pgx
 
