@@ -41,7 +41,7 @@ func TestLoading(t *testing.T) {
 		panic(err)
 	}
 
-	err = RegisterType(conn)
+	err = RegisterType(ctx, conn)
 	if err != nil {
 		panic(err)
 	}
@@ -161,10 +161,10 @@ func (VectorCodec) DecodeValue(m *pgtype.Map, oid uint32, format int16, src []by
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func RegisterType(conn *pgx.Conn) error {
+func RegisterType(ctx context.Context, conn *pgx.Conn) error {
 	name := "vector"
 	var oid uint32
-	err := conn.QueryRow(context.Background(), "SELECT oid FROM pg_type WHERE typname = $1", name).Scan(&oid)
+	err := conn.QueryRow(ctx, "SELECT oid FROM pg_type WHERE typname = $1", name).Scan(&oid)
 	if err != nil {
 		return err
 	}
