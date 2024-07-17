@@ -18,7 +18,7 @@ type PgxItem struct {
 	SparseEmbedding pgvector.SparseVector
 }
 
-func CreatePgxItems(conn *pgx.Conn, ctx context.Context) {
+func CreatePgxItems(ctx context.Context, conn *pgx.Conn) {
 	items := []PgxItem{
 		PgxItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
 		PgxItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101", SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
@@ -55,7 +55,7 @@ func TestPgx(t *testing.T) {
 		panic(err)
 	}
 
-	CreatePgxItems(conn, ctx)
+	CreatePgxItems(ctx, conn)
 
 	rows, err := conn.Query(ctx, "SELECT id, embedding, half_embedding, sparse_embedding, embedding <-> $1 FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 1, 1}))
 	if err != nil {
