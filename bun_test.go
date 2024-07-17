@@ -36,7 +36,7 @@ func (*BunItem) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuer
 	return err
 }
 
-func CreateBunItems(db *bun.DB, ctx context.Context) {
+func CreateBunItems(ctx context.Context, db *bun.DB) {
 	items := []BunItem{
 		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
 		BunItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101", SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
@@ -68,7 +68,7 @@ func TestBun(t *testing.T) {
 		panic(err)
 	}
 
-	CreateBunItems(db, ctx)
+	CreateBunItems(ctx, db)
 
 	var items []BunItem
 	err = db.NewSelect().Model(&items).OrderExpr("embedding <-> ?", pgvector.NewVector([]float32{1, 1, 1})).Limit(5).Scan(ctx)
