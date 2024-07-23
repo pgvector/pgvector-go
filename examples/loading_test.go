@@ -11,6 +11,7 @@ import (
 	"github.com/jackc/pgio"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/pgvector/pgvector-go"
 )
 
 func TestLoading(t *testing.T) {
@@ -70,7 +71,7 @@ func TestLoading(t *testing.T) {
 			if i%10000 == 0 {
 				fmt.Printf(".")
 			}
-			return []interface{}{Vector{vec: embeddings[i]}}, nil
+			return []interface{}{pgvector.NewVector(embeddings[i])}, nil
 		}),
 	)
 	if err != nil {
@@ -110,10 +111,6 @@ func TestLoading(t *testing.T) {
 	}
 }
 
-type Vector struct {
-	vec []float32
-}
-
 type VectorCodec struct{}
 
 func (VectorCodec) FormatSupported(format int16) bool {
@@ -125,7 +122,7 @@ func (VectorCodec) PreferredFormat() int16 {
 }
 
 func (VectorCodec) PlanEncode(m *pgtype.Map, oid uint32, format int16, value any) pgtype.EncodePlan {
-	_, ok := value.(Vector)
+	_, ok := value.(pgvector.Vector)
 	if !ok {
 		return nil
 	}
@@ -140,11 +137,12 @@ func (VectorCodec) PlanEncode(m *pgtype.Map, oid uint32, format int16, value any
 type encodePlanVectorCodecBinary struct{}
 
 func (encodePlanVectorCodecBinary) Encode(value any, buf []byte) (newBuf []byte, err error) {
-	v := value.(Vector)
-	buf = pgio.AppendInt16(buf, int16(len(v.vec)))
+	v := value.(pgvector.Vector)
+	vec := v.Slice()
+	buf = pgio.AppendInt16(buf, int16(len(vec)))
 	buf = pgio.AppendInt16(buf, 0)
-	for i := 0; i < len(v.vec); i++ {
-		buf = pgio.AppendUint32(buf, math.Float32bits(v.vec[i]))
+	for i := 0; i < len(vec); i++ {
+		buf = pgio.AppendUint32(buf, math.Float32bits(vec[i]))
 	}
 	return buf, nil
 }
