@@ -138,17 +138,16 @@ func (v SparseVector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
 
 // DecodeBinary decodes a binary representation of a sparse vector.
 func (v *SparseVector) DecodeBinary(buf []byte) error {
-	dim := int(binary.BigEndian.Uint32(buf[0:4]))
+	dim := binary.BigEndian.Uint32(buf[0:4])
 	nnz := int(binary.BigEndian.Uint32(buf[4:8]))
-
-	unused := int(binary.BigEndian.Uint32(buf[8:12]))
+	unused := binary.BigEndian.Uint32(buf[8:12])
 	if unused != 0 {
 		return fmt.Errorf("expected unused to be 0")
 	}
 
 	v.dim = int32(dim)
-	v.indices = make([]int32, 0, dim)
-	v.values = make([]float32, 0, dim)
+	v.indices = make([]int32, 0, nnz)
+	v.values = make([]float32, 0, nnz)
 
 	for i := 0; i < nnz; i++ {
 		offset := 12 + 4*i

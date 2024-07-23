@@ -69,8 +69,7 @@ func (v Vector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
 // DecodeBinary decodes a binary representation of a vector.
 func (v *Vector) DecodeBinary(buf []byte) error {
 	dim := int(binary.BigEndian.Uint16(buf[0:2]))
-
-	unused := int(binary.BigEndian.Uint16(buf[2:4]))
+	unused := binary.BigEndian.Uint16(buf[2:4])
 	if unused != 0 {
 		return fmt.Errorf("expected unused to be 0")
 	}
