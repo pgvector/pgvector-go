@@ -63,15 +63,15 @@ func TestEnt(t *testing.T) {
 		panic(err)
 	}
 	if items[0].ID != 1 || items[1].ID != 3 || items[2].ID != 2 {
-		t.Errorf("Bad ids")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad embedding")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad half embedding")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad sparse embedding")
+		t.Error()
 	}
 }

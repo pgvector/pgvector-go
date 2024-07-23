@@ -89,18 +89,18 @@ func TestPgx(t *testing.T) {
 	}
 
 	if items[0].Id != 1 || items[1].Id != 3 || items[2].Id != 2 {
-		t.Errorf("Bad ids")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad embedding")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad half embedding")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad sparse embedding")
+		t.Error()
 	}
 	if distances[0] != 0 || distances[1] != 1 || distances[2] != math.Sqrt(3) {
-		t.Errorf("Bad distances")
+		t.Error()
 	}
 }

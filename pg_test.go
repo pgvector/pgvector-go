@@ -64,19 +64,19 @@ func TestPg(t *testing.T) {
 		panic(err)
 	}
 	if items[0].Id != 1 || items[1].Id != 3 || items[2].Id != 2 {
-		t.Errorf("Bad ids")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad embedding")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad half embedding")
+		t.Error()
 	}
 	if items[0].BinaryEmbedding != "000" || items[1].BinaryEmbedding != "111" || items[2].BinaryEmbedding != "101" {
-		t.Errorf("Bad binary embeddings")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad sparse embedding")
+		t.Error()
 	}
 
 	var distances []float64
@@ -85,6 +85,6 @@ func TestPg(t *testing.T) {
 		panic(err)
 	}
 	if distances[0] != 0 || distances[1] != math.Sqrt(3) || distances[2] != 1 {
-		t.Errorf("Bad distances")
+		t.Error()
 	}
 }

@@ -45,18 +45,18 @@ func TestSqlx(t *testing.T) {
 	var items []SqlxItem
 	db.Select(&items, "SELECT * FROM sqlx_items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 1, 1}))
 	if items[0].Id != 1 || items[1].Id != 3 || items[2].Id != 2 {
-		t.Errorf("Bad ids")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].Embedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad embedding")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad half embedding")
+		t.Error()
 	}
 	if items[0].BinaryEmbedding != "000" || items[1].BinaryEmbedding != "111" || items[2].BinaryEmbedding != "101" {
-		t.Errorf("Bad binary embeddings")
+		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
-		t.Errorf("Bad sparse embedding")
+		t.Error()
 	}
 }
