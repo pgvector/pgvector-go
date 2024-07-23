@@ -2,14 +2,13 @@ package pgvector_test
 
 import (
 	"context"
-	"database/sql/driver"
 	"fmt"
 	"math/rand"
 	"testing"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/pgvector/pgvector-go"
+	pgxvector "github.com/pgvector/pgvector-go/pgx"
 )
 
 func TestLoading(t *testing.T) {
@@ -40,7 +39,7 @@ func TestLoading(t *testing.T) {
 		panic(err)
 	}
 
-	err = RegisterType(ctx, conn)
+	err = pgxvector.RegisterTypes(ctx, conn)
 	if err != nil {
 		panic(err)
 	}
@@ -107,59 +106,4 @@ func TestLoading(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-}
-
-type VectorCodec struct{}
-
-func (VectorCodec) FormatSupported(format int16) bool {
-	return format == pgx.BinaryFormatCode
-}
-
-func (VectorCodec) PreferredFormat() int16 {
-	return pgx.BinaryFormatCode
-}
-
-func (VectorCodec) PlanEncode(m *pgtype.Map, oid uint32, format int16, value any) pgtype.EncodePlan {
-	_, ok := value.(pgvector.Vector)
-	if !ok {
-		return nil
-	}
-
-	if format == pgx.BinaryFormatCode {
-		return encodePlanVectorCodecBinary{}
-	}
-
-	return nil
-}
-
-type encodePlanVectorCodecBinary struct{}
-
-func (encodePlanVectorCodecBinary) Encode(value any, buf []byte) (newBuf []byte, err error) {
-	v := value.(pgvector.Vector)
-	return v.EncodeBinary(buf)
-}
-
-func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {
-	return nil
-}
-
-func (VectorCodec) DecodeDatabaseSQLValue(m *pgtype.Map, oid uint32, format int16, src []byte) (driver.Value, error) {
-	return nil, fmt.Errorf("Not implemented")
-}
-
-func (VectorCodec) DecodeValue(m *pgtype.Map, oid uint32, format int16, src []byte) (any, error) {
-	return nil, fmt.Errorf("Not implemented")
-}
-
-func RegisterType(ctx context.Context, conn *pgx.Conn) error {
-	name := "vector"
-	var oid uint32
-	err := conn.QueryRow(ctx, "SELECT oid FROM pg_type WHERE typname = $1", name).Scan(&oid)
-	if err != nil {
-		return err
-	}
-	codec := &VectorCodec{}
-	ty := &pgtype.Type{Name: name, OID: oid, Codec: codec}
-	conn.TypeMap().RegisterType(ty)
-	return nil
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/pgvector/pgvector-go"
+	pgxvector "github.com/pgvector/pgvector-go/pgx"
 )
 
 type PgxItem struct {
@@ -43,6 +44,11 @@ func TestPgx(t *testing.T) {
 	defer conn.Close(ctx)
 
 	_, err = conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
+	if err != nil {
+		panic(err)
+	}
+
+	err = pgxvector.RegisterTypes(ctx, conn)
 	if err != nil {
 		panic(err)
 	}

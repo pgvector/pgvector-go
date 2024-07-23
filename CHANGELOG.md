@@ -1,5 +1,6 @@
 ## 0.2.1 (unreleased)
 
+- Added `pgx` package
 - Added `EncodeBinary` and `DecodeBinary` methods to `Vector`
 - Added `EncodeBinary` and `DecodeBinary` methods to `SparseVector`
 
