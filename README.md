@@ -34,6 +34,7 @@ Or check out some examples:
 - [Embeddings](examples/openai_test.go) with OpenAI
 - [Binary embeddings](examples/cohere_test.go) with Cohere
 - [Recommendations](examples/disco_test.go) with Disco
+- [Horizontal scaling](examples/citus_test.go) with Citus
 - [Bulk loading](examples/loading_test.go) with `COPY`
 
 ## pgx
