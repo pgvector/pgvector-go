@@ -57,7 +57,7 @@ func (v *Vector) Parse(s string) error {
 }
 
 // EncodeBinary encodes a binary representation of a vector.
-func (v *Vector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
+func (v Vector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
 	buf = binary.BigEndian.AppendUint16(buf, uint16(len(v.vec)))
 	buf = binary.BigEndian.AppendUint16(buf, 0)
 	for i := 0; i < len(v.vec); i++ {
