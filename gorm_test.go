@@ -64,6 +64,9 @@ func TestGorm(t *testing.T) {
 	if items[0].BinaryEmbedding != "000" || items[1].BinaryEmbedding != "111" || items[2].BinaryEmbedding != "101" {
 		t.Errorf("Bad binary embeddings")
 	}
+	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Errorf("Bad sparse embedding")
+	}
 
 	var distances []float64
 	db.Model(&GormItem{}).Select("embedding <-> ?", pgvector.NewVector([]float32{1, 1, 1})).Order("id").Find(&distances)

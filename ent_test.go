@@ -46,7 +46,7 @@ func TestEnt(t *testing.T) {
 
 	_, err = client.Item.CreateBulk(
 		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{2, 2, 2})).SetHalfEmbedding(pgvector.NewHalfVector([]float32{2, 2, 2})).SetBinaryEmbedding("101").SetSparseEmbedding(pgvector.NewSparseVector([]float32{2, 2, 2})),
-		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{1, 1, 2})).SetHalfEmbedding(pgvector.NewHalfVector([]float32{1, 1, 2})).SetBinaryEmbedding("111").SetSparseEmbedding(pgvector.NewSparseVector([]float32{2, 2, 2})),
+		client.Item.Create().SetEmbedding(pgvector.NewVector([]float32{1, 1, 2})).SetHalfEmbedding(pgvector.NewHalfVector([]float32{1, 1, 2})).SetBinaryEmbedding("111").SetSparseEmbedding(pgvector.NewSparseVector([]float32{1, 1, 2})),
 	).Save(ctx)
 	if err != nil {
 		panic(err)
@@ -70,5 +70,8 @@ func TestEnt(t *testing.T) {
 	}
 	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad half embedding")
+	}
+	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Errorf("Bad sparse embedding")
 	}
 }
