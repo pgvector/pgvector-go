@@ -1,3 +1,7 @@
+## 0.2.1 (unreleased)
+
+- Added `EncodeBinary` method to `Vector`
+
 ## 0.2.0 (2024-06-25)
 
 - Added support for `halfvec` and `sparsevec` types

@@ -3,8 +3,10 @@ package pgvector
 import (
 	"database/sql"
 	"database/sql/driver"
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -52,6 +54,16 @@ func (v *Vector) Parse(s string) error {
 		v.vec = append(v.vec, float32(n))
 	}
 	return nil
+}
+
+// EncodeBinary encodes a binary representation of a vector.
+func (v *Vector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
+	buf = binary.BigEndian.AppendUint16(buf, uint16(len(v.vec)))
+	buf = binary.BigEndian.AppendUint16(buf, 0)
+	for i := 0; i < len(v.vec); i++ {
+		buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(v.vec[i]))
+	}
+	return buf, nil
 }
 
 // statically assert that Vector implements sql.Scanner.

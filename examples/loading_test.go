@@ -4,11 +4,9 @@ import (
 	"context"
 	"database/sql/driver"
 	"fmt"
-	"math"
 	"math/rand"
 	"testing"
 
-	"github.com/jackc/pgio"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/pgvector/pgvector-go"
@@ -138,13 +136,7 @@ type encodePlanVectorCodecBinary struct{}
 
 func (encodePlanVectorCodecBinary) Encode(value any, buf []byte) (newBuf []byte, err error) {
 	v := value.(pgvector.Vector)
-	vec := v.Slice()
-	buf = pgio.AppendInt16(buf, int16(len(vec)))
-	buf = pgio.AppendInt16(buf, 0)
-	for i := 0; i < len(vec); i++ {
-		buf = pgio.AppendUint32(buf, math.Float32bits(vec[i]))
-	}
-	return buf, nil
+	return v.EncodeBinary(buf)
 }
 
 func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {
