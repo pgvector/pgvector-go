@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"math"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -124,8 +125,10 @@ func (v *SparseVector) Parse(s string) error {
 
 // EncodeBinary encodes a binary representation of a sparse vector.
 func (v SparseVector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
+	nnz := len(v.indices)
+	buf = slices.Grow(buf, 12+8*nnz)
 	buf = binary.BigEndian.AppendUint32(buf, uint32(v.dim))
-	buf = binary.BigEndian.AppendUint32(buf, uint32(len(v.indices)))
+	buf = binary.BigEndian.AppendUint32(buf, uint32(nnz))
 	buf = binary.BigEndian.AppendUint32(buf, 0)
 	for _, v := range v.indices {
 		buf = binary.BigEndian.AppendUint32(buf, uint32(v))

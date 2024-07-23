@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -58,10 +59,12 @@ func (v *Vector) Parse(s string) error {
 
 // EncodeBinary encodes a binary representation of a vector.
 func (v Vector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
-	buf = binary.BigEndian.AppendUint16(buf, uint16(len(v.vec)))
+	dim := len(v.vec)
+	buf = slices.Grow(buf, 4+4*dim)
+	buf = binary.BigEndian.AppendUint16(buf, uint16(dim))
 	buf = binary.BigEndian.AppendUint16(buf, 0)
-	for i := 0; i < len(v.vec); i++ {
-		buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(v.vec[i]))
+	for _, v := range v.vec {
+		buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(v))
 	}
 	return buf, nil
 }
