@@ -66,6 +66,23 @@ func (v *Vector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
 	return buf, nil
 }
 
+// DecodeBinary decodes a binary representation of a vector.
+func (v *Vector) DecodeBinary(buf []byte) error {
+	dim := int(binary.BigEndian.Uint16(buf[0:2]))
+
+	unused := int(binary.BigEndian.Uint16(buf[2:4]))
+	if unused != 0 {
+		return fmt.Errorf("expected unused to be 0")
+	}
+
+	v.vec = make([]float32, 0, dim)
+	for i := 0; i < dim; i++ {
+		offset := 4 + 4*i
+		v.vec = append(v.vec, math.Float32frombits(binary.BigEndian.Uint32(buf[offset:offset+4])))
+	}
+	return nil
+}
+
 // statically assert that Vector implements sql.Scanner.
 var _ sql.Scanner = (*Vector)(nil)
 

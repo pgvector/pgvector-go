@@ -1,6 +1,6 @@
 ## 0.2.1 (unreleased)
 
-- Added `EncodeBinary` method to `Vector`
+- Added `EncodeBinary` and `DecodeBinary` methods to `Vector`
 
 ## 0.2.0 (2024-06-25)
 
