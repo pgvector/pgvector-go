@@ -1,6 +1,7 @@
 ## 0.2.1 (unreleased)
 
 - Added `EncodeBinary` and `DecodeBinary` methods to `Vector`
+- Added `EncodeBinary` and `DecodeBinary` methods to `SparseVector`
 
 ## 0.2.0 (2024-06-25)
 
