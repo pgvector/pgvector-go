@@ -97,6 +97,9 @@ func TestPgx(t *testing.T) {
 	if !reflect.DeepEqual(items[1].HalfEmbedding.Slice(), []float32{1, 1, 2}) {
 		t.Errorf("Bad half embedding")
 	}
+	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Errorf("Bad sparse embedding")
+	}
 	if distances[0] != 0 || distances[1] != 1 || distances[2] != math.Sqrt(3) {
 		t.Errorf("Bad distances")
 	}
