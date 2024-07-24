@@ -10,8 +10,9 @@ import (
 
 func RegisterTypes(ctx context.Context, conn *pgx.Conn) error {
 	var vectorOid *uint32
+	var halfvecOid *uint32
 	var sparsevecOid *uint32
-	err := conn.QueryRow(ctx, "SELECT to_regtype('vector')::oid, to_regtype('sparsevec')::oid").Scan(&vectorOid, &sparsevecOid)
+	err := conn.QueryRow(ctx, "SELECT to_regtype('vector')::oid, to_regtype('halfvec')::oid, to_regtype('sparsevec')::oid").Scan(&vectorOid, &halfvecOid, &sparsevecOid)
 	if err != nil {
 		return err
 	}
@@ -22,6 +23,10 @@ func RegisterTypes(ctx context.Context, conn *pgx.Conn) error {
 
 	tm := conn.TypeMap()
 	tm.RegisterType(&pgtype.Type{Name: "vector", OID: *vectorOid, Codec: &VectorCodec{}})
+
+	if halfvecOid != nil {
+		tm.RegisterType(&pgtype.Type{Name: "halfvec", OID: *halfvecOid, Codec: &HalfVectorCodec{}})
+	}
 
 	if sparsevecOid != nil {
 		tm.RegisterType(&pgtype.Type{Name: "sparsevec", OID: *sparsevecOid, Codec: &SparseVectorCodec{}})

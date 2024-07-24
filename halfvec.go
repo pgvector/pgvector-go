@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -26,17 +27,9 @@ func (v HalfVector) Slice() []float32 {
 
 // String returns a string representation of the half vector.
 func (v HalfVector) String() string {
-	buf := make([]byte, 0, 2+16*len(v.vec))
-	buf = append(buf, '[')
-
-	for i := 0; i < len(v.vec); i++ {
-		if i > 0 {
-			buf = append(buf, ',')
-		}
-		buf = strconv.AppendFloat(buf, float64(v.vec[i]), 'f', -1, 32)
-	}
-
-	buf = append(buf, ']')
+	// should never throw an error
+	// but returning an empty string is fine if it does
+	buf, _ := v.EncodeText(nil)
 	return string(buf)
 }
 
@@ -52,6 +45,20 @@ func (v *HalfVector) Parse(s string) error {
 		v.vec = append(v.vec, float32(n))
 	}
 	return nil
+}
+
+// EncodeText encodes a text representation of the half vector.
+func (v HalfVector) EncodeText(buf []byte) (newBuf []byte, err error) {
+	buf = slices.Grow(buf, 2+16*len(v.vec))
+	buf = append(buf, '[')
+	for i := 0; i < len(v.vec); i++ {
+		if i > 0 {
+			buf = append(buf, ',')
+		}
+		buf = strconv.AppendFloat(buf, float64(v.vec[i]), 'f', -1, 32)
+	}
+	buf = append(buf, ']')
+	return buf, nil
 }
 
 // statically assert that HalfVector implements sql.Scanner.
