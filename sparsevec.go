@@ -153,15 +153,16 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 	v.dim = int32(dim)
 	v.indices = make([]int32, 0, nnz)
 	v.values = make([]float32, 0, nnz)
+	offset := 12
 
 	for i := 0; i < nnz; i++ {
-		offset := 12 + 4*i
 		v.indices = append(v.indices, int32(binary.BigEndian.Uint32(buf[offset:offset+4])))
+		offset += 4
 	}
 
 	for i := 0; i < nnz; i++ {
-		offset := 12 + 4*nnz + 4*i
 		v.values = append(v.values, math.Float32frombits(binary.BigEndian.Uint32(buf[offset:offset+4])))
+		offset += 4
 	}
 
 	return nil

@@ -78,9 +78,10 @@ func (v *Vector) DecodeBinary(buf []byte) error {
 	}
 
 	v.vec = make([]float32, 0, dim)
+	offset := 4
 	for i := 0; i < dim; i++ {
-		offset := 4 + 4*i
 		v.vec = append(v.vec, math.Float32frombits(binary.BigEndian.Uint32(buf[offset:offset+4])))
+		offset += 4
 	}
 	return nil
 }
