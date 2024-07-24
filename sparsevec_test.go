@@ -16,7 +16,7 @@ func TestNewSparseVector(t *testing.T) {
 }
 
 func TestNewSparseVectorFromMap(t *testing.T) {
-	vec := pgvector.NewSparseVectorFromMap(map[int32]float32{0: 1, 2: 2, 4: 3}, 6)
+	vec := pgvector.NewSparseVectorFromMap(map[int32]float32{2: 2, 4: 3, 0: 1, 3: 0}, 6)
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
 		t.Error()
 	}
