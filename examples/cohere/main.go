@@ -53,7 +53,7 @@ func main() {
 	}
 
 	for i, content := range input {
-		_, err := conn.Exec(ctx, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", content, embeddings[i])
+		_, err := conn.Exec(ctx, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", content, PgBit(embeddings[i]))
 		if err != nil {
 			panic(err)
 		}
@@ -65,7 +65,7 @@ func main() {
 		panic(err)
 	}
 
-	rows, err := conn.Query(ctx, "SELECT id, content FROM documents ORDER BY embedding <~> $1 LIMIT 5", queryEmbedding[0])
+	rows, err := conn.Query(ctx, "SELECT id, content FROM documents ORDER BY embedding <~> $1 LIMIT 5", PgBit(queryEmbedding[0]))
 	if err != nil {
 		panic(err)
 	}
@@ -93,7 +93,7 @@ type embedRequest struct {
 	EmbeddingTypes []string `json:"embedding_types"`
 }
 
-func Embed(texts []string, inputType string, apiKey string) ([]pgtype.Bits, error) {
+func Embed(texts []string, inputType string, apiKey string) ([][]byte, error) {
 	url := "https://api.cohere.com/v1/embed"
 	data := &embedRequest{
 		Texts:          texts,
@@ -132,14 +132,17 @@ func Embed(texts []string, inputType string, apiKey string) ([]pgtype.Bits, erro
 		return nil, err
 	}
 
-	var embeddings []pgtype.Bits
+	var embeddings [][]byte
 	for _, item := range result["embeddings"].(map[string]interface{})["ubinary"].([]interface{}) {
-		buf := make([]byte, 0, len(item.([]interface{})))
+		embedding := make([]byte, 0, len(item.([]interface{})))
 		for _, v := range item.([]interface{}) {
-			buf = append(buf, uint8(v.(float64)))
+			embedding = append(embedding, uint8(v.(float64)))
 		}
-		embedding := pgtype.Bits{Bytes: buf, Len: int32(len(buf) * 8), Valid: true}
 		embeddings = append(embeddings, embedding)
 	}
 	return embeddings, nil
+}
+
+func PgBit(b []byte) pgtype.Bits {
+	return pgtype.Bits{Bytes: b, Len: int32(len(b) * 8), Valid: true}
 }
