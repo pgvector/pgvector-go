@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func main() {
@@ -92,7 +93,7 @@ type embedRequest struct {
 	EmbeddingTypes []string `json:"embedding_types"`
 }
 
-func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
+func Embed(texts []string, inputType string, apiKey string) ([]pgtype.Bits, error) {
 	url := "https://api.cohere.com/v1/embed"
 	data := &embedRequest{
 		Texts:          texts,
@@ -131,13 +132,13 @@ func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
 		return nil, err
 	}
 
-	var embeddings []string
+	var embeddings []pgtype.Bits
 	for _, item := range result["embeddings"].(map[string]interface{})["ubinary"].([]interface{}) {
-		buf := make([]byte, 0, len(item.([]interface{}))*8)
+		buf := make([]byte, 0, len(item.([]interface{})))
 		for _, v := range item.([]interface{}) {
-			buf = fmt.Appendf(buf, "%08b", uint8(v.(float64)))
+			buf = append(buf, uint8(v.(float64)))
 		}
-		embedding := string(buf)
+		embedding := pgtype.Bits{Bytes: buf, Len: int32(len(buf) * 8), Valid: true}
 		embeddings = append(embeddings, embedding)
 	}
 	return embeddings, nil
