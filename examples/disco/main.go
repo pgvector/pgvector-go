@@ -7,6 +7,7 @@ import (
 	"github.com/ankane/disco-go"
 	"github.com/jackc/pgx/v5"
 	"github.com/pgvector/pgvector-go"
+	pgxvector "github.com/pgvector/pgvector-go/pgx"
 )
 
 func main() {
@@ -19,6 +20,11 @@ func main() {
 	defer conn.Close(ctx)
 
 	_, err = conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
+	if err != nil {
+		panic(err)
+	}
+
+	err = pgxvector.RegisterTypes(ctx, conn)
 	if err != nil {
 		panic(err)
 	}
