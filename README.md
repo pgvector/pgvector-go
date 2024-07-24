@@ -14,12 +14,6 @@ Run:
 go get github.com/pgvector/pgvector-go
 ```
 
-Import the package:
-
-```go
-import "github.com/pgvector/pgvector-go"
-```
-
 And follow the instructions for your database library:
 
 - [pgx](#pgx)
@@ -38,6 +32,12 @@ Or check out some examples:
 - [Bulk loading](examples/loading_test.go) with `COPY`
 
 ## pgx
+
+Import the package:
+
+```go
+import "github.com/pgvector/pgvector-go"
+```
 
 Enable the extension
 
@@ -76,6 +76,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](pgx_test.go)
 
 ## pg
+
+Import the package:
+
+```go
+import "github.com/pgvector/pgvector-go"
+```
 
 Enable the extension
 
@@ -123,6 +129,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](pg_test.go)
 
 ## Bun
+
+Import the package:
+
+```go
+import "github.com/pgvector/pgvector-go"
+```
 
 Enable the extension
 
@@ -179,6 +191,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](bun_test.go)
 
 ## Ent
+
+Import the package:
+
+```go
+import "github.com/pgvector/pgvector-go"
+```
 
 Enable the extension (requires the [sql/execquery](https://entgo.io/docs/feature-flags/#sql-raw-api) feature)
 
@@ -240,6 +258,12 @@ See a [full example](ent_test.go)
 
 ## GORM
 
+Import the package:
+
+```go
+import "github.com/pgvector/pgvector-go"
+```
+
 Enable the extension
 
 ```go
@@ -285,6 +309,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](gorm_test.go)
 
 ## sqlx
+
+Import the package:
+
+```go
+import "github.com/pgvector/pgvector-go"
+```
 
 Enable the extension
 
