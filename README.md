@@ -33,7 +33,7 @@ Or check out some examples:
 
 ## pgx
 
-Import the package:
+Import the package
 
 ```go
 import "github.com/pgvector/pgvector-go"
@@ -77,7 +77,7 @@ See a [full example](pgx_test.go)
 
 ## pg
 
-Import the package:
+Import the package
 
 ```go
 import "github.com/pgvector/pgvector-go"
@@ -130,7 +130,7 @@ See a [full example](pg_test.go)
 
 ## Bun
 
-Import the package:
+Import the package
 
 ```go
 import "github.com/pgvector/pgvector-go"
@@ -192,7 +192,7 @@ See a [full example](bun_test.go)
 
 ## Ent
 
-Import the package:
+Import the package
 
 ```go
 import "github.com/pgvector/pgvector-go"
@@ -258,7 +258,7 @@ See a [full example](ent_test.go)
 
 ## GORM
 
-Import the package:
+Import the package
 
 ```go
 import "github.com/pgvector/pgvector-go"
@@ -310,7 +310,7 @@ See a [full example](gorm_test.go)
 
 ## sqlx
 
-Import the package:
+Import the package
 
 ```go
 import "github.com/pgvector/pgvector-go"
