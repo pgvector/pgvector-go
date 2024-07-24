@@ -70,7 +70,7 @@ func (v SparseVector) Slice() []float32 {
 	return vec
 }
 
-// String returns a string representation of the vector.
+// String returns a string representation of the sparse vector.
 func (v SparseVector) String() string {
 	buf := make([]byte, 0, 13+27*len(v.indices))
 	buf = append(buf, '{')
@@ -123,7 +123,7 @@ func (v *SparseVector) Parse(s string) error {
 	return nil
 }
 
-// EncodeBinary encodes a binary representation of a sparse vector.
+// EncodeBinary encodes a binary representation of the sparse vector.
 func (v SparseVector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
 	nnz := len(v.indices)
 	buf = slices.Grow(buf, 12+8*nnz)

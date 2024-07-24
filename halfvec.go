@@ -24,7 +24,7 @@ func (v HalfVector) Slice() []float32 {
 	return v.vec
 }
 
-// String returns a string representation of the vector.
+// String returns a string representation of the half vector.
 func (v HalfVector) String() string {
 	buf := make([]byte, 0, 2+16*len(v.vec))
 	buf = append(buf, '[')

@@ -57,7 +57,7 @@ func (v *Vector) Parse(s string) error {
 	return nil
 }
 
-// EncodeBinary encodes a binary representation of a vector.
+// EncodeBinary encodes a binary representation of the vector.
 func (v Vector) EncodeBinary(buf []byte) (newBuf []byte, err error) {
 	dim := len(v.vec)
 	buf = slices.Grow(buf, 4+4*dim)
