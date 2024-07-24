@@ -1,16 +1,15 @@
-package pgvector_test
+package main
 
 import (
 	"context"
 	"fmt"
-	"testing"
 
 	"github.com/ankane/disco-go"
 	"github.com/jackc/pgx/v5"
 	"github.com/pgvector/pgvector-go"
 )
 
-func TestDisco(t *testing.T) {
+func main() {
 	ctx := context.Background()
 
 	conn, err := pgx.Connect(ctx, "postgres://localhost/pgvector_example")

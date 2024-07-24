@@ -1,17 +1,16 @@
-package pgvector_test
+package main
 
 import (
 	"context"
 	"fmt"
 	"math/rand"
-	"testing"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/pgvector/pgvector-go"
 	pgxvector "github.com/pgvector/pgvector-go/pgx"
 )
 
-func TestLoading(t *testing.T) {
+func main() {
 	// generate random data
 
 	rows := 1000000

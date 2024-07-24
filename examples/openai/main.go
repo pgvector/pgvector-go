@@ -1,4 +1,4 @@
-package pgvector_test
+package main
 
 import (
 	"bytes"
@@ -7,15 +7,16 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"testing"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/pgvector/pgvector-go"
 )
 
-func TestCohere(t *testing.T) {
-	apiKey := os.Getenv("CO_API_KEY")
+func main() {
+	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
-		t.Skip("Set CO_API_KEY")
+		fmt.Println("Set OPENAI_API_KEY")
+		os.Exit(1)
 	}
 
 	ctx := context.Background()
@@ -36,7 +37,7 @@ func TestCohere(t *testing.T) {
 		panic(err)
 	}
 
-	_, err = conn.Exec(ctx, "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1024))")
+	_, err = conn.Exec(ctx, "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(1536))")
 	if err != nil {
 		panic(err)
 	}
@@ -46,25 +47,20 @@ func TestCohere(t *testing.T) {
 		"The cat is purring",
 		"The bear is growling",
 	}
-	embeddings, err := Embed(input, "search_document", apiKey)
+	embeddings, err := FetchEmbeddings(input, apiKey)
 	if err != nil {
 		panic(err)
 	}
 
 	for i, content := range input {
-		_, err := conn.Exec(ctx, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", content, embeddings[i])
+		_, err := conn.Exec(ctx, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", content, pgvector.NewVector(embeddings[i]))
 		if err != nil {
 			panic(err)
 		}
 	}
 
-	query := "forest"
-	queryEmbedding, err := Embed([]string{query}, "search_query", apiKey)
-	if err != nil {
-		panic(err)
-	}
-
-	rows, err := conn.Query(ctx, "SELECT id, content FROM documents ORDER BY embedding <~> $1 LIMIT 5", queryEmbedding[0])
+	documentId := 1
+	rows, err := conn.Query(ctx, "SELECT id, content FROM documents WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = $1) LIMIT 5", documentId)
 	if err != nil {
 		panic(err)
 	}
@@ -85,20 +81,16 @@ func TestCohere(t *testing.T) {
 	}
 }
 
-type embedRequest struct {
-	Texts          []string `json:"texts"`
-	Model          string   `json:"model"`
-	InputType      string   `json:"input_type"`
-	EmbeddingTypes []string `json:"embedding_types"`
+type apiRequest struct {
+	Input []string `json:"input"`
+	Model string   `json:"model"`
 }
 
-func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
-	url := "https://api.cohere.com/v1/embed"
-	data := &embedRequest{
-		Texts:          texts,
-		Model:          "embed-english-v3.0",
-		InputType:      inputType,
-		EmbeddingTypes: []string{"ubinary"},
+func FetchEmbeddings(input []string, apiKey string) ([][]float32, error) {
+	url := "https://api.openai.com/v1/embeddings"
+	data := &apiRequest{
+		Input: input,
+		Model: "text-embedding-3-small",
 	}
 
 	b, err := json.Marshal(data)
@@ -131,13 +123,12 @@ func Embed(texts []string, inputType string, apiKey string) ([]string, error) {
 		return nil, err
 	}
 
-	var embeddings []string
-	for _, item := range result["embeddings"].(map[string]interface{})["ubinary"].([]interface{}) {
-		buf := make([]byte, 0, len(item.([]interface{}))*8)
-		for _, v := range item.([]interface{}) {
-			buf = fmt.Appendf(buf, "%08b", uint8(v.(float64)))
+	var embeddings [][]float32
+	for _, item := range result["data"].([]interface{}) {
+		var embedding []float32
+		for _, v := range item.(map[string]interface{})["embedding"].([]interface{}) {
+			embedding = append(embedding, float32(v.(float64)))
 		}
-		embedding := string(buf)
 		embeddings = append(embeddings, embedding)
 	}
 	return embeddings, nil
