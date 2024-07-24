@@ -1,4 +1,4 @@
-## 0.2.1 (unreleased)
+## 0.2.1 (2024-07-23)
 
 - Added `pgx` package
 - Added `EncodeBinary` and `DecodeBinary` methods to `Vector`

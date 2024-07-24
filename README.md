@@ -33,16 +33,25 @@ Or check out some examples:
 
 ## pgx
 
-Import the package
+Import the packages
 
 ```go
-import "github.com/pgvector/pgvector-go"
+import (
+    "github.com/pgvector/pgvector-go"
+    pgxvector "github.com/pgvector/pgvector-go/pgx"
+)
 ```
 
 Enable the extension
 
 ```go
 _, err := conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
+```
+
+Register the types
+
+```go
+err := pgxvector.RegisterTypes(ctx, conn)
 ```
 
 Create a table
