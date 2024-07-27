@@ -53,7 +53,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	conn.Close(ctx)
+	err = conn.Close(ctx)
+	if err != nil {
+		panic(err)
+	}
 
 	// reconnect for updated GUC variables to take effect
 	conn, err = pgx.Connect(ctx, "postgres://localhost/pgvector_citus")
