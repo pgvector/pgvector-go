@@ -394,5 +394,6 @@ go test -v
 To run an example:
 
 ```sh
+createdb pgvector_example
 go run ./examples/loading
 ```
