@@ -59,7 +59,7 @@ func TestPgx(t *testing.T) {
 		panic(err)
 	}
 
-	_, err = conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3), score float8)")
+	_, err = conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3))")
 	if err != nil {
 		panic(err)
 	}
