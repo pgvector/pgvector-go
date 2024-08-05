@@ -117,10 +117,22 @@ func TestPgx(t *testing.T) {
 	}
 
 	var item PgxItem
-	row := conn.QueryRow(ctx, "SELECT embedding, sparse_embedding FROM pgx_items ORDER BY id LIMIT 1", pgx.QueryResultFormats{pgx.TextFormatCode, pgx.TextFormatCode})
-	err = row.Scan(&item.Embedding, &item.SparseEmbedding)
+	row := conn.QueryRow(ctx, "SELECT embedding, half_embedding, binary_embedding, sparse_embedding FROM pgx_items ORDER BY id DESC LIMIT 1", pgx.QueryResultFormats{pgx.TextFormatCode, pgx.TextFormatCode, pgx.TextFormatCode, pgx.TextFormatCode})
+	err = row.Scan(&item.Embedding, &item.HalfEmbedding, &item.BinaryEmbedding, &item.SparseEmbedding)
 	if err != nil {
 		panic(err)
+	}
+	if !reflect.DeepEqual(item.Embedding.Slice(), []float32{1, 1, 2}) {
+		t.Error()
+	}
+	if !reflect.DeepEqual(item.HalfEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Error()
+	}
+	if item.BinaryEmbedding != "111" {
+		t.Error()
+	}
+	if !reflect.DeepEqual(item.SparseEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Error()
 	}
 
 	_, err = conn.CopyFrom(
