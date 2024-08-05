@@ -59,7 +59,7 @@ func TestPgx(t *testing.T) {
 		panic(err)
 	}
 
-	_, err = conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3))")
+	_, err = conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3), score float8)")
 	if err != nil {
 		panic(err)
 	}
@@ -114,5 +114,24 @@ func TestPgx(t *testing.T) {
 	}
 	if distances[0] != 0 || distances[1] != 1 || distances[2] != math.Sqrt(3) {
 		t.Error()
+	}
+
+	var item PgxItem
+	row := conn.QueryRow(ctx, "SELECT embedding, sparse_embedding FROM pgx_items ORDER BY id LIMIT 1", pgx.QueryResultFormats{pgx.TextFormatCode, pgx.TextFormatCode})
+	err = row.Scan(&item.Embedding, &item.SparseEmbedding)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = conn.CopyFrom(
+		ctx,
+		pgx.Identifier{"pgx_items"},
+		[]string{"embedding", "binary_embedding", "sparse_embedding"},
+		pgx.CopyFromSlice(1, func(i int) ([]any, error) {
+			return []interface{}{"[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
+		}),
+	)
+	if err != nil {
+		panic(err)
 	}
 }

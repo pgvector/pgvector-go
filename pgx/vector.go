@@ -41,14 +41,19 @@ func (encodePlanVectorCodecBinary) Encode(value any, buf []byte) (newBuf []byte,
 
 type scanPlanVectorCodecBinary struct{}
 
+type scanPlanVectorCodecText struct{}
+
 func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {
 	_, ok := target.(*pgvector.Vector)
 	if !ok {
 		return nil
 	}
 
-	if format == pgx.BinaryFormatCode {
+	switch format {
+	case pgx.BinaryFormatCode:
 		return scanPlanVectorCodecBinary{}
+	case pgx.TextFormatCode:
+		return scanPlanVectorCodecText{}
 	}
 
 	return nil
@@ -57,6 +62,11 @@ func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any)
 func (scanPlanVectorCodecBinary) Scan(src []byte, dst any) error {
 	v := (dst).(*pgvector.Vector)
 	return v.DecodeBinary(src)
+}
+
+func (scanPlanVectorCodecText) Scan(src []byte, dst any) error {
+	v := (dst).(*pgvector.Vector)
+	return v.Scan(src)
 }
 
 func (c VectorCodec) DecodeDatabaseSQLValue(m *pgtype.Map, oid uint32, format int16, src []byte) (driver.Value, error) {
