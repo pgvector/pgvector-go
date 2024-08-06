@@ -74,21 +74,9 @@ func (v SparseVector) Slice() []float32 {
 
 // String returns a string representation of the sparse vector.
 func (v SparseVector) String() string {
-	buf := make([]byte, 0, 13+27*len(v.indices))
-	buf = append(buf, '{')
-
-	for i := 0; i < len(v.indices); i++ {
-		if i > 0 {
-			buf = append(buf, ',')
-		}
-		buf = strconv.AppendInt(buf, int64(v.indices[i])+1, 10)
-		buf = append(buf, ':')
-		buf = strconv.AppendFloat(buf, float64(v.values[i]), 'f', -1, 32)
-	}
-
-	buf = append(buf, '}')
-	buf = append(buf, '/')
-	buf = strconv.AppendInt(buf, int64(v.dim), 10)
+	// should never throw an error
+	// but returning an empty string is fine if it does
+	buf, _ := v.EncodeText(nil)
 	return string(buf)
 }
 
@@ -166,6 +154,26 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 	}
 
 	return nil
+}
+
+// EncodeText encodes a text representation of the sparse vector.
+func (v SparseVector) EncodeText(buf []byte) (newBuf []byte, err error) {
+	buf = slices.Grow(buf, 13+27*len(v.indices))
+	buf = append(buf, '{')
+
+	for i := 0; i < len(v.indices); i++ {
+		if i > 0 {
+			buf = append(buf, ',')
+		}
+		buf = strconv.AppendInt(buf, int64(v.indices[i])+1, 10)
+		buf = append(buf, ':')
+		buf = strconv.AppendFloat(buf, float64(v.values[i]), 'f', -1, 32)
+	}
+
+	buf = append(buf, '}')
+	buf = append(buf, '/')
+	buf = strconv.AppendInt(buf, int64(v.dim), 10)
+	return buf, nil
 }
 
 // statically assert that SparseVector implements sql.Scanner.

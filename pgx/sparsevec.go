@@ -46,7 +46,7 @@ type encodePlanSparseVectorCodecText struct{}
 
 func (encodePlanSparseVectorCodecText) Encode(value any, buf []byte) (newBuf []byte, err error) {
 	v := value.(pgvector.SparseVector)
-	return append(buf, v.String()...), nil
+	return v.EncodeText(buf)
 }
 
 func (SparseVectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {

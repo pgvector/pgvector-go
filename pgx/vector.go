@@ -46,7 +46,7 @@ type encodePlanVectorCodecText struct{}
 
 func (encodePlanVectorCodecText) Encode(value any, buf []byte) (newBuf []byte, err error) {
 	v := value.(pgvector.Vector)
-	return append(buf, v.String()...), nil
+	return v.EncodeText(buf)
 }
 
 func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {
