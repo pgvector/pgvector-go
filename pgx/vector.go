@@ -12,7 +12,7 @@ import (
 type VectorCodec struct{}
 
 func (VectorCodec) FormatSupported(format int16) bool {
-	return format == pgx.BinaryFormatCode
+	return format == pgx.BinaryFormatCode || format == pgx.TextFormatCode
 }
 
 func (VectorCodec) PreferredFormat() int16 {
@@ -25,8 +25,11 @@ func (VectorCodec) PlanEncode(m *pgtype.Map, oid uint32, format int16, value any
 		return nil
 	}
 
-	if format == pgx.BinaryFormatCode {
+	switch format {
+	case pgx.BinaryFormatCode:
 		return encodePlanVectorCodecBinary{}
+	case pgx.TextFormatCode:
+		return encodePlanVectorCodecText{}
 	}
 
 	return nil
@@ -37,6 +40,13 @@ type encodePlanVectorCodecBinary struct{}
 func (encodePlanVectorCodecBinary) Encode(value any, buf []byte) (newBuf []byte, err error) {
 	v := value.(pgvector.Vector)
 	return v.EncodeBinary(buf)
+}
+
+type encodePlanVectorCodecText struct{}
+
+func (encodePlanVectorCodecText) Encode(value any, buf []byte) (newBuf []byte, err error) {
+	v := value.(pgvector.Vector)
+	return append(buf, v.String()...), nil
 }
 
 func (VectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {

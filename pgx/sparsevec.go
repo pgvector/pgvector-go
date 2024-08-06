@@ -12,7 +12,7 @@ import (
 type SparseVectorCodec struct{}
 
 func (SparseVectorCodec) FormatSupported(format int16) bool {
-	return format == pgx.BinaryFormatCode
+	return format == pgx.BinaryFormatCode || format == pgx.TextFormatCode
 }
 
 func (SparseVectorCodec) PreferredFormat() int16 {
@@ -25,8 +25,11 @@ func (SparseVectorCodec) PlanEncode(m *pgtype.Map, oid uint32, format int16, val
 		return nil
 	}
 
-	if format == pgx.BinaryFormatCode {
+	switch format {
+	case pgx.BinaryFormatCode:
 		return encodePlanSparseVectorCodecBinary{}
+	case pgx.TextFormatCode:
+		return encodePlanSparseVectorCodecText{}
 	}
 
 	return nil
@@ -37,6 +40,13 @@ type encodePlanSparseVectorCodecBinary struct{}
 func (encodePlanSparseVectorCodecBinary) Encode(value any, buf []byte) (newBuf []byte, err error) {
 	v := value.(pgvector.SparseVector)
 	return v.EncodeBinary(buf)
+}
+
+type encodePlanSparseVectorCodecText struct{}
+
+func (encodePlanSparseVectorCodecText) Encode(value any, buf []byte) (newBuf []byte, err error) {
+	v := value.(pgvector.SparseVector)
+	return append(buf, v.String()...), nil
 }
 
 func (SparseVectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {
