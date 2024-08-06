@@ -46,6 +46,7 @@ type encodePlanSparseVectorCodecText struct{}
 
 func (encodePlanSparseVectorCodecText) Encode(value any, buf []byte) (newBuf []byte, err error) {
 	v := value.(pgvector.SparseVector)
+	// use String() for now to avoid adding another method to SparseVector
 	return append(buf, v.String()...), nil
 }
 

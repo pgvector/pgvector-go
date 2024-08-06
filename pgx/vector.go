@@ -46,6 +46,7 @@ type encodePlanVectorCodecText struct{}
 
 func (encodePlanVectorCodecText) Encode(value any, buf []byte) (newBuf []byte, err error) {
 	v := value.(pgvector.Vector)
+	// use String() for now to avoid adding another method to Vector
 	return append(buf, v.String()...), nil
 }
 
