@@ -39,10 +39,6 @@ func (encodePlanSparseVectorCodecBinary) Encode(value any, buf []byte) (newBuf [
 	return v.EncodeBinary(buf)
 }
 
-type scanPlanSparseVectorCodecBinary struct{}
-
-type scanPlanSparseVectorCodecText struct{}
-
 func (SparseVectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, target any) pgtype.ScanPlan {
 	_, ok := target.(*pgvector.SparseVector)
 	if !ok {
@@ -59,10 +55,14 @@ func (SparseVectorCodec) PlanScan(m *pgtype.Map, oid uint32, format int16, targe
 	return nil
 }
 
+type scanPlanSparseVectorCodecBinary struct{}
+
 func (scanPlanSparseVectorCodecBinary) Scan(src []byte, dst any) error {
 	v := (dst).(*pgvector.SparseVector)
 	return v.DecodeBinary(src)
 }
+
+type scanPlanSparseVectorCodecText struct{}
 
 func (scanPlanSparseVectorCodecText) Scan(src []byte, dst any) error {
 	v := (dst).(*pgvector.SparseVector)
