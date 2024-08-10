@@ -1,4 +1,4 @@
-## 0.2.2 (unreleased)
+## 0.2.2 (2024-08-10)
 
 - Added support for `CopyFrom` with `string` values
 
