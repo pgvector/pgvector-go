@@ -8,6 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pgvector/pgvector-go"
 	pgxvector "github.com/pgvector/pgvector-go/pgx"
 )
@@ -136,6 +137,28 @@ func TestPgx(t *testing.T) {
 	}
 
 	_, err = conn.CopyFrom(
+		ctx,
+		pgx.Identifier{"pgx_items"},
+		[]string{"embedding", "binary_embedding", "sparse_embedding"},
+		pgx.CopyFromSlice(1, func(i int) ([]any, error) {
+			return []interface{}{"[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
+		}),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	config, err := pgxpool.ParseConfig("postgres://localhost/pgvector_go_test")
+	if err != nil {
+		panic(err)
+	}
+	config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
+		return pgxvector.RegisterTypes(ctx, conn)
+	}
+	pool, err := pgxpool.NewWithConfig(ctx, config)
+	defer pool.Close()
+
+	_, err = pool.CopyFrom(
 		ctx,
 		pgx.Identifier{"pgx_items"},
 		[]string{"embedding", "binary_embedding", "sparse_embedding"},

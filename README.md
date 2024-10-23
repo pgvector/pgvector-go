@@ -48,10 +48,18 @@ Enable the extension
 _, err := conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
 ```
 
-Register the types
+Register the types with the connection
 
 ```go
 err := pgxvector.RegisterTypes(ctx, conn)
+```
+
+or the pool
+
+```go
+config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
+    return pgxvector.RegisterTypes(ctx, conn)
+}
 ```
 
 Create a table
