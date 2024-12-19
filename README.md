@@ -27,6 +27,7 @@ Or check out some examples:
 
 - [Embeddings](examples/openai/main.go) with OpenAI
 - [Binary embeddings](examples/cohere/main.go) with Cohere
+- [Hybrid search](examples/hybrid/main.go) with Ollama (Reciprocal Rank Fusion)
 - [Recommendations](examples/disco/main.go) with Disco
 - [Horizontal scaling](examples/citus/main.go) with Citus
 - [Bulk loading](examples/loading/main.go) with `COPY`
