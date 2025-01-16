@@ -169,4 +169,25 @@ func TestPgx(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+
+	embeddings := []pgvector.Vector{pgvector.NewVector([]float32{1, 2, 3}), pgvector.NewVector([]float32{4, 5, 6})}
+	halfEmbeddings := []pgvector.HalfVector{pgvector.NewHalfVector([]float32{1, 2, 3}), pgvector.NewHalfVector([]float32{4, 5, 6})}
+	sparseEmbeddings := []pgvector.SparseVector{pgvector.NewSparseVector([]float32{1, 2, 3}), pgvector.NewSparseVector([]float32{4, 5, 6})}
+	row = conn.QueryRow(ctx, "SELECT $1::vector[], $2::halfvec[], $3::sparsevec[]", embeddings, halfEmbeddings, sparseEmbeddings)
+	var scanEmbeddings []pgvector.Vector
+	var scanHalfEmbeddings []pgvector.HalfVector
+	var scanSparseEmbeddings []pgvector.SparseVector
+	err = row.Scan(&scanEmbeddings, &scanHalfEmbeddings, &scanSparseEmbeddings)
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(scanEmbeddings, embeddings) {
+		t.Error()
+	}
+	if !reflect.DeepEqual(scanHalfEmbeddings, halfEmbeddings) {
+		t.Error()
+	}
+	if !reflect.DeepEqual(scanSparseEmbeddings, sparseEmbeddings) {
+		t.Error()
+	}
 }

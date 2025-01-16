@@ -1,3 +1,7 @@
+## 0.2.3 (unreleased)
+
+- Added support for Postgres arrays for pgx
+
 ## 0.2.2 (2024-08-10)
 
 - Added support for `CopyFrom` with `string` values
