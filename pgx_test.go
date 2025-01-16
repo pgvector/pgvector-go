@@ -19,6 +19,7 @@ type PgxItem struct {
 	HalfEmbedding   pgvector.HalfVector
 	BinaryEmbedding string
 	SparseEmbedding pgvector.SparseVector
+	Embeddings      []pgvector.Vector
 }
 
 func CreatePgxItems(ctx context.Context, conn *pgx.Conn) {
@@ -28,23 +29,26 @@ func CreatePgxItems(ctx context.Context, conn *pgx.Conn) {
 			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 1}),
 			BinaryEmbedding: "000",
 			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1}),
+			Embeddings:      []pgvector.Vector{pgvector.NewVector([]float32{1, 1, 1})},
 		},
 		PgxItem{
 			Embedding:       pgvector.NewVector([]float32{2, 2, 2}),
 			HalfEmbedding:   pgvector.NewHalfVector([]float32{2, 2, 2}),
 			BinaryEmbedding: "101",
 			SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2}),
+			Embeddings:      []pgvector.Vector{pgvector.NewVector([]float32{2, 2, 2})},
 		},
 		PgxItem{
 			Embedding:       pgvector.NewVector([]float32{1, 1, 2}),
 			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 2}),
 			BinaryEmbedding: "111",
 			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2}),
+			Embeddings:      []pgvector.Vector{pgvector.NewVector([]float32{1, 1, 2})},
 		},
 	}
 
 	for _, item := range items {
-		_, err := conn.Exec(ctx, "INSERT INTO pgx_items (embedding, half_embedding, binary_embedding, sparse_embedding) VALUES ($1, $2, $3, $4)", item.Embedding, item.HalfEmbedding, item.BinaryEmbedding, item.SparseEmbedding)
+		_, err := conn.Exec(ctx, "INSERT INTO pgx_items (embedding, half_embedding, binary_embedding, sparse_embedding, embeddings) VALUES ($1, $2, $3, $4, $5)", item.Embedding, item.HalfEmbedding, item.BinaryEmbedding, item.SparseEmbedding, item.Embeddings)
 		if err != nil {
 			panic(err)
 		}
@@ -75,7 +79,7 @@ func TestPgx(t *testing.T) {
 		panic(err)
 	}
 
-	_, err = conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3))")
+	_, err = conn.Exec(ctx, "CREATE TABLE pgx_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3), embeddings vector(3)[])")
 	if err != nil {
 		panic(err)
 	}
@@ -87,7 +91,7 @@ func TestPgx(t *testing.T) {
 
 	CreatePgxItems(ctx, conn)
 
-	rows, err := conn.Query(ctx, "SELECT id, embedding, half_embedding, binary_embedding, sparse_embedding, embedding <-> $1 FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 1, 1}))
+	rows, err := conn.Query(ctx, "SELECT id, embedding, half_embedding, binary_embedding, sparse_embedding, embeddings, embedding <-> $1 FROM pgx_items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 1, 1}))
 	if err != nil {
 		panic(err)
 	}
@@ -100,7 +104,7 @@ func TestPgx(t *testing.T) {
 		var item PgxItem
 		var binaryEmbedding pgtype.Bits
 		var distance float64
-		err = rows.Scan(&item.Id, &item.Embedding, &item.HalfEmbedding, &binaryEmbedding, &item.SparseEmbedding, &distance)
+		err = rows.Scan(&item.Id, &item.Embedding, &item.HalfEmbedding, &binaryEmbedding, &item.SparseEmbedding, &item.Embeddings, &distance)
 		if err != nil {
 			panic(err)
 		}
@@ -126,6 +130,9 @@ func TestPgx(t *testing.T) {
 		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Error()
+	}
+	if !reflect.DeepEqual(items[1].Embeddings, []pgvector.Vector{pgvector.NewVector([]float32{1, 1, 2})}) {
 		t.Error()
 	}
 	if distances[0] != 0 || distances[1] != 1 || distances[2] != math.Sqrt(3) {
