@@ -1,4 +1,4 @@
-## 0.2.3 (unreleased)
+## 0.2.3 (2025-01-15)
 
 - Added support for Postgres arrays for pgx
 
