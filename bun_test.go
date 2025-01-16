@@ -22,6 +22,7 @@ type BunItem struct {
 	HalfEmbedding   pgvector.HalfVector   `bun:"type:halfvec(3)"`
 	BinaryEmbedding string                `bun:"type:bit(3)"`
 	SparseEmbedding pgvector.SparseVector `bun:"type:sparsevec(3)"`
+	Embeddings      []pgvector.Vector     `bun:"type:vector(3)[]"`
 }
 
 var _ bun.AfterCreateTableHook = (*BunItem)(nil)
@@ -43,18 +44,21 @@ func CreateBunItems(ctx context.Context, db *bun.DB) {
 			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 1}),
 			BinaryEmbedding: "000",
 			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1}),
+			Embeddings:      []pgvector.Vector{pgvector.NewVector([]float32{1, 1, 1})},
 		},
 		BunItem{
 			Embedding:       pgvector.NewVector([]float32{2, 2, 2}),
 			HalfEmbedding:   pgvector.NewHalfVector([]float32{2, 2, 2}),
 			BinaryEmbedding: "101",
 			SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2}),
+			Embeddings:      []pgvector.Vector{pgvector.NewVector([]float32{2, 2, 2})},
 		},
 		BunItem{
 			Embedding:       pgvector.NewVector([]float32{1, 1, 2}),
 			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 2}),
 			BinaryEmbedding: "111",
 			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2}),
+			Embeddings:      []pgvector.Vector{pgvector.NewVector([]float32{1, 1, 2})},
 		},
 	}
 
@@ -103,6 +107,9 @@ func TestBun(t *testing.T) {
 		t.Error()
 	}
 	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
+		t.Error()
+	}
+	if !reflect.DeepEqual(items[1].Embeddings, []pgvector.Vector{pgvector.NewVector([]float32{1, 1, 2})}) {
 		t.Error()
 	}
 
