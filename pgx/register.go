@@ -25,21 +25,21 @@ func RegisterTypes(ctx context.Context, conn *pgx.Conn) error {
 	}
 
 	tm := conn.TypeMap()
-	vectorType := pgtype.Type{Name: "vector", OID: *vectorOid, Codec: &VectorCodec{}}
-	tm.RegisterType(&vectorType)
-	tm.RegisterType(&pgtype.Type{Name: "_vector", OID: *vectorArrayOid, Codec: &pgtype.ArrayCodec{ElementType: &vectorType}})
+	registerType(tm, "vector", *vectorOid, *vectorArrayOid, &VectorCodec{})
 
 	if halfvecOid != nil {
-		halfvecType := pgtype.Type{Name: "halfvec", OID: *halfvecOid, Codec: &HalfVectorCodec{}}
-		tm.RegisterType(&halfvecType)
-		tm.RegisterType(&pgtype.Type{Name: "_halfvec", OID: *halfvecArrayOid, Codec: &pgtype.ArrayCodec{ElementType: &halfvecType}})
+		registerType(tm, "halfvec", *halfvecOid, *halfvecArrayOid, &HalfVectorCodec{})
 	}
 
 	if sparsevecOid != nil {
-		sparsevecType := pgtype.Type{Name: "sparsevec", OID: *sparsevecOid, Codec: &SparseVectorCodec{}}
-		tm.RegisterType(&sparsevecType)
-		tm.RegisterType(&pgtype.Type{Name: "_sparsevec", OID: *sparsevecArrayOid, Codec: &pgtype.ArrayCodec{ElementType: &sparsevecType}})
+		registerType(tm, "sparsevec", *sparsevecOid, *sparsevecArrayOid, &SparseVectorCodec{})
 	}
 
 	return nil
+}
+
+func registerType(tm *pgtype.Map, name string, oid uint32, arrayOid uint32, codec pgtype.Codec) {
+	t := pgtype.Type{Name: name, OID: oid, Codec: codec}
+	tm.RegisterType(&t)
+	tm.RegisterType(&pgtype.Type{Name: "_" + name, OID: arrayOid, Codec: &pgtype.ArrayCodec{ElementType: &t}})
 }
