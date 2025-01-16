@@ -38,9 +38,24 @@ func (*BunItem) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuer
 
 func CreateBunItems(ctx context.Context, db *bun.DB) {
 	items := []BunItem{
-		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
-		BunItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101", SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
-		BunItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), BinaryEmbedding: "111", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
+		BunItem{
+			Embedding:       pgvector.NewVector([]float32{1, 1, 1}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 1}),
+			BinaryEmbedding: "000",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1}),
+		},
+		BunItem{
+			Embedding:       pgvector.NewVector([]float32{2, 2, 2}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{2, 2, 2}),
+			BinaryEmbedding: "101",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2}),
+		},
+		BunItem{
+			Embedding:       pgvector.NewVector([]float32{1, 1, 2}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 2}),
+			BinaryEmbedding: "111",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2}),
+		},
 	}
 
 	_, err := db.NewInsert().Model(&items).Exec(ctx)

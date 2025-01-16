@@ -23,9 +23,24 @@ type PgxItem struct {
 
 func CreatePgxItems(ctx context.Context, conn *pgx.Conn) {
 	items := []PgxItem{
-		PgxItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
-		PgxItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101", SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
-		PgxItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), BinaryEmbedding: "111", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
+		PgxItem{
+			Embedding:       pgvector.NewVector([]float32{1, 1, 1}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 1}),
+			BinaryEmbedding: "000",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1}),
+		},
+		PgxItem{
+			Embedding:       pgvector.NewVector([]float32{2, 2, 2}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{2, 2, 2}),
+			BinaryEmbedding: "101",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2}),
+		},
+		PgxItem{
+			Embedding:       pgvector.NewVector([]float32{1, 1, 2}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 2}),
+			BinaryEmbedding: "111",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2}),
+		},
 	}
 
 	for _, item := range items {
@@ -170,9 +185,18 @@ func TestPgx(t *testing.T) {
 		panic(err)
 	}
 
-	embeddings := []pgvector.Vector{pgvector.NewVector([]float32{1, 2, 3}), pgvector.NewVector([]float32{4, 5, 6})}
-	halfEmbeddings := []pgvector.HalfVector{pgvector.NewHalfVector([]float32{1, 2, 3}), pgvector.NewHalfVector([]float32{4, 5, 6})}
-	sparseEmbeddings := []pgvector.SparseVector{pgvector.NewSparseVector([]float32{1, 2, 3}), pgvector.NewSparseVector([]float32{4, 5, 6})}
+	embeddings := []pgvector.Vector{
+		pgvector.NewVector([]float32{1, 2, 3}),
+		pgvector.NewVector([]float32{4, 5, 6}),
+	}
+	halfEmbeddings := []pgvector.HalfVector{
+		pgvector.NewHalfVector([]float32{1, 2, 3}),
+		pgvector.NewHalfVector([]float32{4, 5, 6}),
+	}
+	sparseEmbeddings := []pgvector.SparseVector{
+		pgvector.NewSparseVector([]float32{1, 2, 3}),
+		pgvector.NewSparseVector([]float32{4, 5, 6}),
+	}
 	row = conn.QueryRow(ctx, "SELECT $1::vector[], $2::halfvec[], $3::sparsevec[]", embeddings, halfEmbeddings, sparseEmbeddings)
 	var scanEmbeddings []pgvector.Vector
 	var scanHalfEmbeddings []pgvector.HalfVector

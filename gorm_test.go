@@ -21,9 +21,24 @@ type GormItem struct {
 
 func CreateGormItems(db *gorm.DB) {
 	items := []GormItem{
-		GormItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
-		GormItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101", SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
-		GormItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), BinaryEmbedding: "111", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
+		GormItem{
+			Embedding:       pgvector.NewVector([]float32{1, 1, 1}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 1}),
+			BinaryEmbedding: "000",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1}),
+		},
+		GormItem{
+			Embedding:       pgvector.NewVector([]float32{2, 2, 2}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{2, 2, 2}),
+			BinaryEmbedding: "101",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2}),
+		},
+		GormItem{
+			Embedding:       pgvector.NewVector([]float32{1, 1, 2}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 2}),
+			BinaryEmbedding: "111",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2}),
+		},
 	}
 
 	result := db.Create(items)

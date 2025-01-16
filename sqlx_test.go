@@ -19,9 +19,24 @@ type SqlxItem struct {
 
 func CreateSqlxItems(db *sqlx.DB) {
 	items := []SqlxItem{
-		SqlxItem{Embedding: pgvector.NewVector([]float32{1, 1, 1}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 1}), BinaryEmbedding: "000", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1})},
-		SqlxItem{Embedding: pgvector.NewVector([]float32{2, 2, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{2, 2, 2}), BinaryEmbedding: "101", SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2})},
-		SqlxItem{Embedding: pgvector.NewVector([]float32{1, 1, 2}), HalfEmbedding: pgvector.NewHalfVector([]float32{1, 1, 2}), BinaryEmbedding: "111", SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2})},
+		SqlxItem{
+			Embedding:       pgvector.NewVector([]float32{1, 1, 1}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 1}),
+			BinaryEmbedding: "000",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 1}),
+		},
+		SqlxItem{
+			Embedding:       pgvector.NewVector([]float32{2, 2, 2}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{2, 2, 2}),
+			BinaryEmbedding: "101",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{2, 2, 2}),
+		},
+		SqlxItem{
+			Embedding:       pgvector.NewVector([]float32{1, 1, 2}),
+			HalfEmbedding:   pgvector.NewHalfVector([]float32{1, 1, 2}),
+			BinaryEmbedding: "111",
+			SparseEmbedding: pgvector.NewSparseVector([]float32{1, 1, 2}),
+		},
 	}
 
 	_, err := db.NamedExec(`INSERT INTO sqlx_items (embedding, halfembedding, binaryembedding, sparseembedding) VALUES (:embedding, :halfembedding, :binaryembedding, :sparseembedding)`, items)
