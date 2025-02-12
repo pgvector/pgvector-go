@@ -73,4 +73,11 @@ func TestSparseVectorParse(t *testing.T) {
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
 		t.Error()
 	}
+	err = vec.Parse("{1:1, 3:2, 5:3}/6")
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
+		t.Error()
+	}
 }

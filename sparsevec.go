@@ -107,7 +107,7 @@ func (v *SparseVector) Parse(s string) error {
 	v.values = make([]float32, 0, len(elements))
 
 	for i := 0; i < len(elements); i++ {
-		ep := strings.SplitN(elements[i], ":", 2)
+		ep := strings.SplitN(strings.TrimSpace(elements[i]), ":", 2)
 
 		n, err := strconv.ParseInt(ep[0], 10, 32)
 		if err != nil {
