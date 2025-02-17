@@ -53,7 +53,7 @@ func main() {
 		"The cat is purring",
 		"The bear is growling",
 	}
-	embeddings, err := FetchEmbeddings(input)
+	embeddings, err := Embed(input)
 	if err != nil {
 		panic(err)
 	}
@@ -66,7 +66,7 @@ func main() {
 	}
 
 	query := "forest"
-	queryEmbeddings, err := FetchEmbeddings([]string{query})
+	queryEmbeddings, err := Embed([]string{query})
 	if err != nil {
 		panic(err)
 	}
@@ -94,7 +94,7 @@ type apiRequest struct {
 	Inputs []string `json:"inputs"`
 }
 
-func FetchEmbeddings(inputs []string) ([]map[int32]float32, error) {
+func Embed(inputs []string) ([]map[int32]float32, error) {
 	url := "http://localhost:3000/embed_sparse"
 	data := &apiRequest{
 		Inputs: inputs,

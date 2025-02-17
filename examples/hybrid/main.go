@@ -51,7 +51,7 @@ func main() {
 		"The cat is purring",
 		"The bear is growling",
 	}
-	embeddings, err := FetchEmbeddings(input)
+	embeddings, err := Embed(input)
 	if err != nil {
 		panic(err)
 	}
@@ -87,7 +87,7 @@ ORDER BY score DESC
 LIMIT 5
 	`
 	query := "growling bear"
-	queryEmbedding, err := FetchEmbeddings([]string{query})
+	queryEmbedding, err := Embed([]string{query})
 	if err != nil {
 		panic(err)
 	}
@@ -118,7 +118,7 @@ type apiRequest struct {
 	Model string   `json:"model"`
 }
 
-func FetchEmbeddings(input []string) ([][]float32, error) {
+func Embed(input []string) ([][]float32, error) {
 	url := "http://localhost:11434/api/embed"
 	data := &apiRequest{
 		Input: input,

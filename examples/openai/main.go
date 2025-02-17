@@ -53,7 +53,7 @@ func main() {
 		"The cat is purring",
 		"The bear is growling",
 	}
-	embeddings, err := FetchEmbeddings(input, apiKey)
+	embeddings, err := Embed(input, apiKey)
 	if err != nil {
 		panic(err)
 	}
@@ -65,8 +65,13 @@ func main() {
 		}
 	}
 
-	documentId := 1
-	rows, err := conn.Query(ctx, "SELECT id, content FROM documents WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = $1) LIMIT 5", documentId)
+	query := "forest"
+	queryEmbedding, err := Embed([]string{query}, apiKey)
+	if err != nil {
+		panic(err)
+	}
+
+	rows, err := conn.Query(ctx, "SELECT id, content FROM documents ORDER BY embedding <=> $1 LIMIT 5", pgvector.NewVector(queryEmbedding[0]))
 	if err != nil {
 		panic(err)
 	}
@@ -92,7 +97,7 @@ type apiRequest struct {
 	Model string   `json:"model"`
 }
 
-func FetchEmbeddings(input []string, apiKey string) ([][]float32, error) {
+func Embed(input []string, apiKey string) ([][]float32, error) {
 	url := "https://api.openai.com/v1/embeddings"
 	data := &apiRequest{
 		Input: input,
