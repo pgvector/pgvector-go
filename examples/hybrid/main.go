@@ -51,7 +51,7 @@ func main() {
 		"The cat is purring",
 		"The bear is growling",
 	}
-	embeddings, err := Embed(input)
+	embeddings, err := Embed(input, "search_document")
 	if err != nil {
 		panic(err)
 	}
@@ -87,7 +87,7 @@ ORDER BY score DESC
 LIMIT 5
 	`
 	query := "growling bear"
-	queryEmbedding, err := Embed([]string{query})
+	queryEmbedding, err := Embed([]string{query}, "search_query")
 	if err != nil {
 		panic(err)
 	}
@@ -118,7 +118,14 @@ type apiRequest struct {
 	Model string   `json:"model"`
 }
 
-func Embed(input []string) ([][]float32, error) {
+func Embed(texts []string, taskType string) ([][]float32, error) {
+	// nomic-embed-text uses a task prefix
+	// https://huggingface.co/nomic-ai/nomic-embed-text-v1.5
+	input := make([]string, 0, len(texts))
+	for _, text := range texts {
+		input = append(input, taskType+": "+text)
+	}
+
 	url := "http://localhost:11434/api/embed"
 	data := &apiRequest{
 		Input: input,
