@@ -377,6 +377,77 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 
 See a [full example](sqlx_test.go)
 
+## Reference
+
+### Vectors
+
+Create a vector from a slice
+
+```go
+vec := pgvector.NewVector([]float32{1, 2, 3})
+```
+
+Get a slice
+
+```go
+slice := vec.Slice()
+```
+
+### Half Vectors
+
+Create a half vector from a slice
+
+```go
+vec := pgvector.NewHalfVector([]float32{1, 2, 3})
+```
+
+Get a slice
+
+```go
+slice := vec.Slice()
+```
+
+### Sparse Vectors
+
+Create a sparse vector from a slice
+
+```go
+vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
+```
+
+Or a map of non-zero elements
+
+```go
+elements := map[int32]float32{0: 1, 2: 2, 4: 3}
+vec := pgvector.NewSparseVectorFromMap(elements, 6)
+```
+
+Note: Indices start at 0
+
+Get the number of dimensions
+
+```go
+dim := vec.Dimensions()
+```
+
+Get the indices of non-zero elements
+
+```go
+indices := vec.Indices()
+```
+
+Get the values of non-zero elements
+
+```go
+values := vec.Values()
+```
+
+Get a slice
+
+```go
+slice := vec.Slice()
+```
+
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-go/blob/master/CHANGELOG.md)
