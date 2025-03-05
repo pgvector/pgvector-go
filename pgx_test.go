@@ -178,6 +178,9 @@ func TestPgx(t *testing.T) {
 		return pgxvector.RegisterTypes(ctx, conn)
 	}
 	pool, err := pgxpool.NewWithConfig(ctx, config)
+	if err != nil {
+		panic(err)
+	}
 	defer pool.Close()
 
 	_, err = pool.CopyFrom(
