@@ -1,4 +1,4 @@
 /go.sum
-/ent/*
-!/ent/generate.go
-!/ent/schema
+/test/ent/*
+!/test/ent/generate.go
+!/test/ent/schema

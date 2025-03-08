@@ -26,5 +26,5 @@ jobs:
           sudo make install
       - if: ${{ matrix.go == '1.24' }}
         run: go get -u ./...
-      - run: go generate ./ent && go mod tidy
+      - run: go generate ./test/ent && go mod tidy
       - run: go test -v

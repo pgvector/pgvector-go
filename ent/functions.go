@@ -1,4 +1,4 @@
-package entvec
+package ent
 
 import (
 	"entgo.io/ent/dialect/sql"
