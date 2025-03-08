@@ -87,4 +87,74 @@ func TestEnt(t *testing.T) {
 	if !reflect.DeepEqual(items[1].SparseEmbedding.Slice(), []float32{1, 1, 2}) {
 		t.Error()
 	}
+
+	items, err = client.Item.
+		Query().
+		Order(func(s *sql.Selector) {
+			s.OrderExpr(entvec.MaxInnerProduct("embedding", embedding))
+		}).
+		Limit(5).
+		All(ctx)
+	if err != nil {
+		panic(err)
+	}
+	if items[0].ID != 2 || items[1].ID != 3 || items[2].ID != 1 {
+		t.Error()
+	}
+
+	items, err = client.Item.
+		Query().
+		Order(func(s *sql.Selector) {
+			s.OrderExpr(entvec.CosineDistance("embedding", embedding))
+		}).
+		Limit(5).
+		All(ctx)
+	if err != nil {
+		panic(err)
+	}
+	if items[0].ID != 1 || items[1].ID != 2 || items[2].ID != 3 {
+		t.Error()
+	}
+
+	items, err = client.Item.
+		Query().
+		Order(func(s *sql.Selector) {
+			s.OrderExpr(entvec.L1Distance("embedding", embedding))
+		}).
+		Limit(5).
+		All(ctx)
+	if err != nil {
+		panic(err)
+	}
+	if items[0].ID != 1 || items[1].ID != 3 || items[2].ID != 2 {
+		t.Error()
+	}
+
+	items, err = client.Item.
+		Query().
+		Order(func(s *sql.Selector) {
+			s.OrderExpr(entvec.HammingDistance("binary_embedding", "101"))
+		}).
+		Limit(5).
+		All(ctx)
+	if err != nil {
+		panic(err)
+	}
+	if items[0].ID != 2 || items[1].ID != 3 || items[2].ID != 1 {
+		t.Error()
+	}
+
+	items, err = client.Item.
+		Query().
+		Order(func(s *sql.Selector) {
+			s.OrderExpr(entvec.JaccardDistance("binary_embedding", "101"))
+		}).
+		Limit(5).
+		All(ctx)
+	if err != nil {
+		panic(err)
+	}
+	if items[0].ID != 2 || items[1].ID != 3 || items[2].ID != 1 {
+		t.Error()
+	}
 }
