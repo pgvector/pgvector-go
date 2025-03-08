@@ -40,7 +40,7 @@ Import the packages
 ```go
 import (
     "github.com/pgvector/pgvector-go"
-    pgxvector "github.com/pgvector/pgvector-go/pgx"
+    pgxvec "github.com/pgvector/pgvector-go/pgx"
 )
 ```
 
@@ -53,14 +53,14 @@ _, err := conn.Exec(ctx, "CREATE EXTENSION IF NOT EXISTS vector")
 Register the types with the connection
 
 ```go
-err := pgxvector.RegisterTypes(ctx, conn)
+err := pgxvec.RegisterTypes(ctx, conn)
 ```
 
 or the pool
 
 ```go
 config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
-    return pgxvector.RegisterTypes(ctx, conn)
+    return pgxvec.RegisterTypes(ctx, conn)
 }
 ```
 

@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pgvector/pgvector-go"
-	pgxvector "github.com/pgvector/pgvector-go/pgx"
+	pgxvec "github.com/pgvector/pgvector-go/pgx"
 )
 
 type PgxItem struct {
@@ -69,7 +69,7 @@ func TestPgx(t *testing.T) {
 		panic(err)
 	}
 
-	err = pgxvector.RegisterTypes(ctx, conn)
+	err = pgxvec.RegisterTypes(ctx, conn)
 	if err != nil {
 		panic(err)
 	}
@@ -175,7 +175,7 @@ func TestPgx(t *testing.T) {
 		panic(err)
 	}
 	config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
-		return pgxvector.RegisterTypes(ctx, conn)
+		return pgxvec.RegisterTypes(ctx, conn)
 	}
 	pool, err := pgxpool.NewWithConfig(ctx, config)
 	if err != nil {
