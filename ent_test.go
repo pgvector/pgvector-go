@@ -9,6 +9,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/pgvector/pgvector-go"
 	"github.com/pgvector/pgvector-go/ent"
+	"github.com/pgvector/pgvector-go/entvec"
 )
 
 func TestEnt(t *testing.T) {
@@ -67,7 +68,7 @@ func TestEnt(t *testing.T) {
 	items, err := client.Item.
 		Query().
 		Order(func(s *sql.Selector) {
-			s.OrderExpr(sql.ExprP("embedding <-> $1", embedding))
+			s.OrderExpr(entvec.L2Distance("embedding", embedding))
 		}).
 		Limit(5).
 		All(ctx)

@@ -1,3 +1,7 @@
+## 0.2.4 (unreleased)
+
+- Added distance functions for Ent
+
 ## 0.2.3 (2025-01-15)
 
 - Added support for Postgres arrays for pgx
