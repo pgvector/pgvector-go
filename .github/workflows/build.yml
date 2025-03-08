@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go: ["1.24", "1.23", "1.22", "1.21"]
+        go: ["1.24", "1.23"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -24,7 +24,5 @@ jobs:
           cd pgvector
           make
           sudo make install
-      - if: ${{ matrix.go == '1.24' }}
-        run: go get -u ./...
       - run: go generate ./test/ent && go mod tidy
       - run: go test -v
