@@ -71,6 +71,9 @@ func (v *HalfVector) Scan(src interface{}) (err error) {
 		return v.Parse(string(src))
 	case string:
 		return v.Parse(src)
+	case []float32:
+		v.vec = src
+		return nil
 	default:
 		return fmt.Errorf("unsupported data type: %T", src)
 	}

@@ -161,9 +161,9 @@ func TestPgx(t *testing.T) {
 	_, err = conn.CopyFrom(
 		ctx,
 		pgx.Identifier{"pgx_items"},
-		[]string{"embedding", "binary_embedding", "sparse_embedding"},
+		[]string{"embedding", "half_embedding", "binary_embedding", "sparse_embedding"},
 		pgx.CopyFromSlice(1, func(i int) ([]any, error) {
-			return []interface{}{"[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
+			return []interface{}{"[1,2,3]", "[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
 		}),
 	)
 	if err != nil {
@@ -186,9 +186,9 @@ func TestPgx(t *testing.T) {
 	_, err = pool.CopyFrom(
 		ctx,
 		pgx.Identifier{"pgx_items"},
-		[]string{"embedding", "binary_embedding", "sparse_embedding"},
+		[]string{"embedding", "half_embedding", "binary_embedding", "sparse_embedding"},
 		pgx.CopyFromSlice(1, func(i int) ([]any, error) {
-			return []interface{}{"[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
+			return []interface{}{"[1,2,3]", "[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
 		}),
 	)
 	if err != nil {

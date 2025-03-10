@@ -1,6 +1,7 @@
 ## 0.3.0 (unreleased)
 
 - Added distance functions for Ent
+- Added support for `halfvec` binary format for pgx
 - Dropped support for Go < 1.23
 
 ## 0.2.3 (2025-01-15)
