@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0 (2025-03-11)
 
 - Added distance functions for Ent
 - Added support for binary format for `HalfVector` and pgx

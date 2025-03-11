@@ -215,6 +215,7 @@ Import the package
 
 ```go
 import "github.com/pgvector/pgvector-go"
+import entvec "github.com/pgvector/pgvector-go/ent"
 ```
 
 Enable the extension (requires the [sql/execquery](https://entgo.io/docs/feature-flags/#sql-raw-api) feature)
@@ -251,11 +252,13 @@ Get the nearest neighbors to a vector
 items, err := client.Item.
     Query().
     Order(func(s *sql.Selector) {
-        s.OrderExpr(sql.ExprP("embedding <-> $1", pgvector.NewVector([]float32{1, 2, 3})))
+        s.OrderExpr(entvec.L2Distance("embedding", pgvector.NewVector([]float32{1, 2, 3})))
     }).
     Limit(5).
     All(ctx)
 ```
+
+Also supports `MaxInnerProduct`, `CosineDistance`, `L1Distance`, `HammingDistance`, and `JaccardDistance`
 
 Add an approximate index
 
