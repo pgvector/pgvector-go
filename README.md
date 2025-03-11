@@ -214,8 +214,10 @@ See a [full example](bun_test.go)
 Import the package
 
 ```go
-import "github.com/pgvector/pgvector-go"
-import entvec "github.com/pgvector/pgvector-go/ent"
+import (
+    "github.com/pgvector/pgvector-go"
+    entvec "github.com/pgvector/pgvector-go/ent"
+)
 ```
 
 Enable the extension (requires the [sql/execquery](https://entgo.io/docs/feature-flags/#sql-raw-api) feature)
