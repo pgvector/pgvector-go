@@ -93,7 +93,8 @@ func (scanPlanHalfVectorCodecBinary) Scan(src []byte, dst any) error {
 		vec = append(vec, float16.Frombits(binary.BigEndian.Uint16(buf[offset:offset+2])).Float32())
 		offset += 2
 	}
-	return v.Scan(vec)
+	v.SetSlice(vec)
+	return nil
 }
 
 type scanPlanHalfVectorCodecText struct{}

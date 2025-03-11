@@ -61,6 +61,11 @@ func (v HalfVector) EncodeText(buf []byte) (newBuf []byte, err error) {
 	return buf, nil
 }
 
+// SetSlice sets the underlying slice of float32.
+func (v *HalfVector) SetSlice(vec []float32) {
+	v.vec = vec
+}
+
 // statically assert that HalfVector implements sql.Scanner.
 var _ sql.Scanner = (*HalfVector)(nil)
 
@@ -71,9 +76,6 @@ func (v *HalfVector) Scan(src interface{}) (err error) {
 		return v.Parse(string(src))
 	case string:
 		return v.Parse(src)
-	case []float32:
-		v.vec = src
-		return nil
 	default:
 		return fmt.Errorf("unsupported data type: %T", src)
 	}
