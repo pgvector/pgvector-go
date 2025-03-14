@@ -1,4 +1,4 @@
-module github.com/pgvector/pgvector-go
+module github.com/cookieai-jar/pgvector-go
 
 go 1.23.0
 
