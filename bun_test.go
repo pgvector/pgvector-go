@@ -8,10 +8,11 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/pgvector/pgvector-go"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
+
+	"github.com/cookieai-jar/pgvector-go"
 )
 
 type BunItem struct {

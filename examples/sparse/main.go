@@ -14,9 +14,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/cookieai-jar/pgvector-go"
+	pgxvector "github.com/cookieai-jar/pgvector-go/pgx"
 	"github.com/jackc/pgx/v5"
-	"github.com/pgvector/pgvector-go"
-	pgxvector "github.com/pgvector/pgvector-go/pgx"
 )
 
 func main() {

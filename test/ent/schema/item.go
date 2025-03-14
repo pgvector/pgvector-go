@@ -6,7 +6,8 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/pgvector/pgvector-go"
+
+	"github.com/cookieai-jar/pgvector-go"
 )
 
 // Item holds the schema definition for the Item entity.

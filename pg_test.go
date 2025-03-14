@@ -8,7 +8,8 @@ import (
 
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
-	"github.com/pgvector/pgvector-go"
+
+	"github.com/cookieai-jar/pgvector-go"
 )
 
 type PgItem struct {

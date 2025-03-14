@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/pgvector/pgvector-go"
+	"github.com/cookieai-jar/pgvector-go"
 )
 
 func TestVectorSlice(t *testing.T) {

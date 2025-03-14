@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	"entgo.io/ent/dialect/sql"
+	"github.com/cookieai-jar/pgvector-go"
+	entvec "github.com/cookieai-jar/pgvector-go/ent"
+	"github.com/cookieai-jar/pgvector-go/test/ent"
 	_ "github.com/lib/pq"
-	"github.com/pgvector/pgvector-go"
-	entvec "github.com/pgvector/pgvector-go/ent"
-	"github.com/pgvector/pgvector-go/test/ent"
 )
 
 func TestEnt(t *testing.T) {

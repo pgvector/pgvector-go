@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/cookieai-jar/pgvector-go"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/pgvector/pgvector-go"
 	"github.com/x448/float16"
 )
 

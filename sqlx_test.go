@@ -6,7 +6,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/pgvector/pgvector-go"
+
+	"github.com/cookieai-jar/pgvector-go"
 )
 
 type SqlxItem struct {

@@ -9,8 +9,9 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/pgvector/pgvector-go"
-	pgxvec "github.com/pgvector/pgvector-go/pgx"
+
+	"github.com/cookieai-jar/pgvector-go"
+	pgxvec "github.com/cookieai-jar/pgvector-go/pgx"
 )
 
 type PgxItem struct {

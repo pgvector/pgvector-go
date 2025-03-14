@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/pgvector/pgvector-go"
+	"github.com/cookieai-jar/pgvector-go"
 )
 
 func TestNewSparseVector(t *testing.T) {

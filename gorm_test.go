@@ -5,10 +5,11 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/pgvector/pgvector-go"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
+	"github.com/cookieai-jar/pgvector-go"
 )
 
 type GormItem struct {
