@@ -37,7 +37,7 @@ func main() {
 		panic(err)
 	}
 
-	_, err = conn.Exec(ctx, "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1024))")
+	_, err = conn.Exec(ctx, "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1536))")
 	if err != nil {
 		panic(err)
 	}
@@ -94,10 +94,10 @@ type embedRequest struct {
 }
 
 func Embed(texts []string, inputType string, apiKey string) ([][]byte, error) {
-	url := "https://api.cohere.com/v1/embed"
+	url := "https://api.cohere.com/v2/embed"
 	data := &embedRequest{
 		Texts:          texts,
-		Model:          "embed-english-v3.0",
+		Model:          "embed-v4.0",
 		InputType:      inputType,
 		EmbeddingTypes: []string{"ubinary"},
 	}
