@@ -91,6 +91,10 @@ var _ sql.Scanner = (*Vector)(nil)
 
 // Scan implements the sql.Scanner interface.
 func (v *Vector) Scan(src interface{}) (err error) {
+	if src == nil {
+		return nil
+	}
+
 	switch src := src.(type) {
 	case []byte:
 		return v.Parse(string(src))
