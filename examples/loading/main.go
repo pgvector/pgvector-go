@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"math/rand"
+	"math/rand/v2"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/pgvector/pgvector-go"

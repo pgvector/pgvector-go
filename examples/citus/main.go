@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"math/rand"
+	"math/rand/v2"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/pgvector/pgvector-go"
@@ -22,7 +22,7 @@ func main() {
 			embedding = append(embedding, rand.Float32())
 		}
 		embeddings = append(embeddings, embedding)
-		categories = append(categories, int64(rand.Intn(100)))
+		categories = append(categories, int64(rand.IntN(100)))
 	}
 
 	// enable extensions
@@ -109,7 +109,7 @@ func main() {
 
 	fmt.Println("Running distributed queries")
 	for i := 0; i < 10; i++ {
-		rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY embedding <-> $1 LIMIT 10", pgvector.NewVector(embeddings[rand.Intn(rows)]))
+		rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY embedding <-> $1 LIMIT 10", pgvector.NewVector(embeddings[rand.IntN(rows)]))
 		if err != nil {
 			panic(err)
 		}
