@@ -58,7 +58,10 @@ func TestSqlx(t *testing.T) {
 	CreateSqlxItems(db)
 
 	var items []SqlxItem
-	db.Select(&items, "SELECT * FROM sqlx_items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 1, 1}))
+	err := db.Select(&items, "SELECT * FROM sqlx_items ORDER BY embedding <-> $1 LIMIT 5", pgvector.NewVector([]float32{1, 1, 1}))
+	if err != nil {
+		panic(err)
+	}
 	if items[0].Id != 1 || items[1].Id != 3 || items[2].Id != 2 {
 		t.Error()
 	}

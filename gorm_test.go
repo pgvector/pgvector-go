@@ -57,7 +57,10 @@ func TestGorm(t *testing.T) {
 	db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
 	db.Exec("DROP TABLE IF EXISTS gorm_items")
 
-	db.AutoMigrate(&GormItem{})
+	err = db.AutoMigrate(&GormItem{})
+	if err != nil {
+		panic(err)
+	}
 
 	db.Exec("CREATE INDEX ON gorm_items USING hnsw (embedding vector_l2_ops)")
 

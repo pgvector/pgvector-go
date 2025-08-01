@@ -62,10 +62,17 @@ func TestPg(t *testing.T) {
 	})
 	defer db.Close()
 
-	db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
-	db.Exec("DROP TABLE IF EXISTS pg_items")
+	_, err := db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
+	if err != nil {
+		panic(err)
+	}
 
-	err := db.Model((*PgItem)(nil)).CreateTable(&orm.CreateTableOptions{})
+	_, err = db.Exec("DROP TABLE IF EXISTS pg_items")
+	if err != nil {
+		panic(err)
+	}
+
+	err = db.Model((*PgItem)(nil)).CreateTable(&orm.CreateTableOptions{})
 	if err != nil {
 		panic(err)
 	}

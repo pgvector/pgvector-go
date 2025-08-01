@@ -79,10 +79,17 @@ func TestBun(t *testing.T) {
 	sqldb := sql.OpenDB(pgconn)
 	db := bun.NewDB(sqldb, pgdialect.New())
 
-	db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
-	db.Exec("DROP TABLE IF EXISTS bun_items")
+	_, err := db.Exec("CREATE EXTENSION IF NOT EXISTS vector")
+	if err != nil {
+		panic(err)
+	}
 
-	_, err := db.NewCreateTable().Model((*BunItem)(nil)).Exec(ctx)
+	_, err = db.Exec("DROP TABLE IF EXISTS bun_items")
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = db.NewCreateTable().Model((*BunItem)(nil)).Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
