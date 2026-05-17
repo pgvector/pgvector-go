@@ -1,4 +1,4 @@
-package pgvector_test
+package adapter_tests_test
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pgvector/pgvector-go"
-	pgxvec "github.com/pgvector/pgvector-go/pgx"
+	pgxvec "github.com/pgvector/pgvector-go/adapters/pgx"
 )
 
 type PgxItem struct {

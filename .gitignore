@@ -1,4 +1,5 @@
-/go.sum
-/test/ent/*
-!/test/ent/generate.go
-!/test/ent/schema
+go.sum
+go.work.sum
+/adapters/ent/test/*
+!/adapters/ent/test/generate.go
+!/adapters/ent/test/schema

@@ -1,4 +1,4 @@
-package pgvector_test
+package adapter_tests_test
 
 import (
 	"reflect"

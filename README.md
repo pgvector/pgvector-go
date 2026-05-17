@@ -14,6 +14,16 @@ Run:
 go get github.com/pgvector/pgvector-go
 ```
 
+Install adapter modules only when needed:
+
+```sh
+# pgx adapter
+go get github.com/pgvector/pgvector-go/adapters/pgx
+
+# ent helpers
+go get github.com/pgvector/pgvector-go/adapters/ent
+```
+
 And follow the instructions for your database library:
 
 - [pgx](#pgx)
@@ -40,7 +50,7 @@ Import the packages
 ```go
 import (
     "github.com/pgvector/pgvector-go"
-    pgxvec "github.com/pgvector/pgvector-go/pgx"
+    pgxvec "github.com/pgvector/pgvector-go/adapters/pgx"
 )
 ```
 
@@ -92,7 +102,7 @@ _, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](pgx_test.go)
+See a [full example](adapter_tests/pgx_test.go)
 
 ## pg
 
@@ -145,7 +155,7 @@ _, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](pg_test.go)
+See a [full example](adapter_tests/pg_test.go)
 
 ## Bun
 
@@ -207,7 +217,7 @@ func (*Item) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuery) 
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](bun_test.go)
+See a [full example](adapter_tests/bun_test.go)
 
 ## Ent
 
@@ -216,7 +226,7 @@ Import the package
 ```go
 import (
     "github.com/pgvector/pgvector-go"
-    entvec "github.com/pgvector/pgvector-go/ent"
+    entvec "github.com/pgvector/pgvector-go/adapters/ent"
 )
 ```
 
@@ -278,7 +288,7 @@ func (Item) Indexes() []ent.Index {
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](ent_test.go)
+See a [full example](adapter_tests/ent_test.go)
 
 ## GORM
 
@@ -330,7 +340,7 @@ db.Exec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lis
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](gorm_test.go)
+See a [full example](adapter_tests/gorm_test.go)
 
 ## sqlx
 
@@ -380,7 +390,7 @@ db.MustExec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH 
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](sqlx_test.go)
+See a [full example](adapter_tests/sqlx_test.go)
 
 ## Reference
 
@@ -472,14 +482,22 @@ To get started with development:
 git clone https://github.com/pgvector/pgvector-go.git
 cd pgvector-go
 go mod tidy
+(cd adapters/pgx && go mod tidy)
+(cd adapters/ent && go mod tidy)
+(cd examples && go mod tidy)
+(cd adapter_tests && go mod tidy)
 createdb pgvector_go_test
-go generate ./test/ent
-go test -v
+(cd ./adapters/ent && go generate ./test)
+go test ./...
+(cd adapters/pgx && go test ./...)
+(cd adapters/ent && go test ./...)
+(cd adapter_tests && go test ./...)
 ```
 
 To run an example:
 
 ```sh
 createdb pgvector_example
-go run ./examples/loading
+cd examples
+go run ./loading
 ```

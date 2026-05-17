@@ -9,7 +9,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/pgvector/pgvector-go"
-	pgxvector "github.com/pgvector/pgvector-go/pgx"
+	pgxvector "github.com/pgvector/pgvector-go/adapters/pgx"
 )
 
 func main() {

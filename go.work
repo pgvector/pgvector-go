@@ -1,0 +1,9 @@
+go 1.23.0
+
+use (
+	.
+	./adapter_tests
+	./adapters/ent
+	./adapters/pgx
+	./examples
+)

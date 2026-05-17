@@ -1,4 +1,4 @@
-package pgvector_test
+package adapter_tests_test
 
 import (
 	"context"
@@ -13,6 +13,16 @@ import (
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 )
+
+func pgUser() string {
+	if user := os.Getenv("PGUSER"); user != "" {
+		return user
+	}
+	if user := os.Getenv("USER"); user != "" {
+		return user
+	}
+	return "postgres"
+}
 
 type BunItem struct {
 	bun.BaseModel `bun:"table:bun_items"`
@@ -73,7 +83,7 @@ func TestBun(t *testing.T) {
 
 	pgconn := pgdriver.NewConnector(
 		pgdriver.WithDatabase("pgvector_go_test"),
-		pgdriver.WithUser(os.Getenv("USER")),
+		pgdriver.WithUser(pgUser()),
 		pgdriver.WithTLSConfig(nil), // sslmode=disable
 	)
 	sqldb := sql.OpenDB(pgconn)

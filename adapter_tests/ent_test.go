@@ -1,4 +1,4 @@
-package pgvector_test
+package adapter_tests_test
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	_ "github.com/lib/pq"
 	"github.com/pgvector/pgvector-go"
-	entvec "github.com/pgvector/pgvector-go/ent"
-	"github.com/pgvector/pgvector-go/test/ent"
+	entvec "github.com/pgvector/pgvector-go/adapters/ent"
+	ent "github.com/pgvector/pgvector-go/adapters/ent/test"
 )
 
 func TestEnt(t *testing.T) {
