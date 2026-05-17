@@ -13,7 +13,12 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
           cache: false # depends on go.sum
-      - run: go mod tidy
+      - run: |
+          go mod tidy
+          (cd adapters/pgx && go mod tidy)
+          (cd adapters/ent && go mod tidy)
+          (cd examples && go mod tidy)
+          (cd adapter_tests && go mod tidy)
       - uses: ankane/setup-postgres@v1
         with:
           database: pgvector_go_test
@@ -24,5 +29,9 @@ jobs:
           cd pgvector
           make
           sudo make install
-      - run: go generate ./test/ent && go mod tidy
-      - run: go test -v
+      - run: (cd adapters/ent && go generate ./test && go mod tidy)
+      - run: go test -v ./...
+      - run: (cd adapters/pgx && go test -v ./...)
+      - run: (cd adapters/ent && go test -v ./...)
+      - run: (cd examples && go test -v ./...)
+      - run: (cd adapter_tests && go test -v ./...)
