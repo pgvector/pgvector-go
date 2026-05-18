@@ -4,6 +4,8 @@
 
 Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg), [Bun](https://github.com/uptrace/bun), [Ent](https://github.com/ent/ent), [GORM](https://github.com/go-gorm/gorm), and [sqlx](https://github.com/jmoiron/sqlx)
 
+**pgvector-go 0.4.0 was recently released** - see [how to upgrade](#upgrading)
+
 [![Build Status](https://github.com/pgvector/pgvector-go/actions/workflows/build.yml/badge.svg)](https://github.com/pgvector/pgvector-go/actions)
 
 ## Getting Started
@@ -33,6 +35,7 @@ Run:
 
 ```sh
 go get github.com/pgvector/pgvector-go
+go get github.com/pgvector/pgvector-go/pgx
 ```
 
 Import the packages
@@ -227,6 +230,7 @@ Run:
 
 ```sh
 go get github.com/pgvector/pgvector-go
+go get github.com/pgvector/pgvector-go/ent
 ```
 
 Import the package
@@ -481,6 +485,30 @@ Get a slice
 
 ```go
 slice := vec.Slice()
+```
+
+## Upgrading
+
+### 0.4.0
+
+For pgx, run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+go get github.com/pgvector/pgvector-go/pgx
+```
+
+For Ent, run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+go get github.com/pgvector/pgvector-go/ent
+```
+
+For other database libraries, run:
+
+```sh
+go get github.com/pgvector/pgvector-go
 ```
 
 ## History

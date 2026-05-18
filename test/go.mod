@@ -14,9 +14,9 @@ require (
 	github.com/jackc/pgx/v5 v5.9.2
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/lib/pq v1.12.3
-	github.com/pgvector/pgvector-go v0.3.0
-	github.com/pgvector/pgvector-go/ent v0.0.0-00010101000000-000000000000
-	github.com/pgvector/pgvector-go/pgx v0.0.0-00010101000000-000000000000
+	github.com/pgvector/pgvector-go v0.4.0
+	github.com/pgvector/pgvector-go/ent v0.4.0
+	github.com/pgvector/pgvector-go/pgx v0.4.0
 	github.com/uptrace/bun v1.2.18
 	github.com/uptrace/bun/dialect/pgdialect v1.2.18
 	github.com/uptrace/bun/driver/pgdriver v1.2.18

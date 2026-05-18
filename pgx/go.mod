@@ -6,7 +6,7 @@ replace github.com/pgvector/pgvector-go => ..
 
 require (
 	github.com/jackc/pgx/v5 v5.9.2
-	github.com/pgvector/pgvector-go v0.3.0
+	github.com/pgvector/pgvector-go v0.4.0
 	github.com/x448/float16 v0.8.4
 )
 
