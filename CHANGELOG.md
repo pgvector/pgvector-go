@@ -1,6 +1,6 @@
 ## 0.4.0 (unreleased)
 
-- Switched from packages to modules
+- Changed `ent` and `pgx` packages to modules
 - Dropped support for Go < 1.25
 
 ## 0.3.0 (2025-03-11)
