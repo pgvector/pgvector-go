@@ -1,3 +1,7 @@
+## 0.4.0 (unreleased)
+
+- Dropped support for Go < 1.25
+
 ## 0.3.0 (2025-03-11)
 
 - Added distance functions for Ent
