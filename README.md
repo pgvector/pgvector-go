@@ -8,13 +8,7 @@ Supports [pgx](https://github.com/jackc/pgx), [pg](https://github.com/go-pg/pg),
 
 ## Getting Started
 
-Run:
-
-```sh
-go get github.com/pgvector/pgvector-go
-```
-
-And follow the instructions for your database library:
+Follow the instructions for your database library:
 
 - [pgx](#pgx)
 - [pg](#pg)
@@ -34,6 +28,12 @@ Or check out some examples:
 - [Bulk loading](examples/loading/main.go) with `COPY`
 
 ## pgx
+
+Run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+```
 
 Import the packages
 
@@ -96,6 +96,12 @@ See a [full example](test/pgx_test.go)
 
 ## pg
 
+Run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+```
+
 Import the package
 
 ```go
@@ -148,6 +154,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](test/pg_test.go)
 
 ## Bun
+
+Run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+```
 
 Import the package
 
@@ -210,6 +222,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](test/bun_test.go)
 
 ## Ent
+
+Run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+```
 
 Import the package
 
@@ -282,6 +300,12 @@ See a [full example](test/ent_test.go)
 
 ## GORM
 
+Run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+```
+
 Import the package
 
 ```go
@@ -333,6 +357,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 See a [full example](test/gorm_test.go)
 
 ## sqlx
+
+Run:
+
+```sh
+go get github.com/pgvector/pgvector-go
+```
 
 Import the package
 
