@@ -476,6 +476,7 @@ createdb pgvector_go_test
 cd test
 go mod tidy
 go generate ./ent
+go mod tidy
 go test -v
 ```
 
