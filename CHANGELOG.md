@@ -1,4 +1,4 @@
-## 0.4.0 (unreleased)
+## 0.4.0 (2026-05-18)
 
 - Changed `ent` and `pgx` packages to modules
 - Dropped support for Go < 1.25
