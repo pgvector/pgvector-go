@@ -92,7 +92,7 @@ _, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](pgx_test.go)
+See a [full example](test/pgx_test.go)
 
 ## pg
 
@@ -145,7 +145,7 @@ _, err := conn.Exec(ctx, "CREATE INDEX ON items USING ivfflat (embedding vector_
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](pg_test.go)
+See a [full example](test/pg_test.go)
 
 ## Bun
 
@@ -207,7 +207,7 @@ func (*Item) AfterCreateTable(ctx context.Context, query *bun.CreateTableQuery) 
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](bun_test.go)
+See a [full example](test/bun_test.go)
 
 ## Ent
 
@@ -278,7 +278,7 @@ func (Item) Indexes() []ent.Index {
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](ent_test.go)
+See a [full example](test/ent_test.go)
 
 ## GORM
 
@@ -330,7 +330,7 @@ db.Exec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lis
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](gorm_test.go)
+See a [full example](test/gorm_test.go)
 
 ## sqlx
 
@@ -380,7 +380,7 @@ db.MustExec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH 
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](sqlx_test.go)
+See a [full example](test/sqlx_test.go)
 
 ## Reference
 
@@ -473,7 +473,9 @@ git clone https://github.com/pgvector/pgvector-go.git
 cd pgvector-go
 go mod tidy
 createdb pgvector_go_test
-go generate ./test/ent
+cd test
+go mod tidy
+go generate ./ent
 go test -v
 ```
 
@@ -481,5 +483,7 @@ To run an example:
 
 ```sh
 createdb pgvector_example
-go run ./examples/loading
+cd examples
+go mod tidy
+go run ./loading
 ```
