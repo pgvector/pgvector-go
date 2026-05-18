@@ -57,6 +57,7 @@ func CreatePgItems(db *pg.DB) {
 
 func TestPg(t *testing.T) {
 	db := pg.Connect(&pg.Options{
+		Addr:     "localhost:5432",
 		User:     os.Getenv("USER"),
 		Database: "pgvector_go_test",
 	})

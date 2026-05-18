@@ -72,6 +72,7 @@ func TestBun(t *testing.T) {
 	ctx := context.Background()
 
 	pgconn := pgdriver.NewConnector(
+		pgdriver.WithAddr("localhost:5432"),
 		pgdriver.WithDatabase("pgvector_go_test"),
 		pgdriver.WithUser(os.Getenv("USER")),
 		pgdriver.WithTLSConfig(nil), // sslmode=disable
