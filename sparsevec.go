@@ -95,19 +95,33 @@ func (v SparseVector) String() string {
 // Parse parses a string representation of a sparse vector.
 func (v *SparseVector) Parse(s string) error {
 	sp := strings.SplitN(s, "/", 2)
+	if len(sp) != 2 {
+		return fmt.Errorf("malformed sparsevec literal")
+	}
 
 	dim, err := strconv.ParseInt(sp[1], 10, 32)
 	if err != nil {
 		return err
 	}
 
-	elements := strings.Split(sp[0][1:len(sp[0])-1], ",")
+	if len(sp[0]) < 2 {
+		return fmt.Errorf("malformed sparsevec literal")
+	}
+
+	elements := []string{}
+	if len(sp[0]) > 2 {
+		elements = strings.Split(sp[0][1:len(sp[0])-1], ",")
+	}
+
 	v.dim = int32(dim)
 	v.indices = make([]int32, 0, len(elements))
 	v.values = make([]float32, 0, len(elements))
 
 	for i := 0; i < len(elements); i++ {
 		ep := strings.SplitN(elements[i], ":", 2)
+		if len(ep) != 2 {
+			return fmt.Errorf("malformed sparsevec literal")
+		}
 
 		n, err := strconv.ParseInt(ep[0], 10, 32)
 		if err != nil {

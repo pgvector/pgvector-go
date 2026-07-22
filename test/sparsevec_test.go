@@ -73,4 +73,27 @@ func TestSparseVectorParse(t *testing.T) {
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
 		t.Error()
 	}
+
+	err = vec.Parse("{}/0")
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{}) {
+		t.Error()
+	}
+
+	err = vec.Parse("")
+	if err == nil || err.Error() != "malformed sparsevec literal" {
+		t.Error()
+	}
+
+	err = vec.Parse("/6")
+	if err == nil || err.Error() != "malformed sparsevec literal" {
+		t.Error()
+	}
+
+	err = vec.Parse("{1}/6")
+	if err == nil || err.Error() != "malformed sparsevec literal" {
+		t.Error()
+	}
 }

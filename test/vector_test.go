@@ -32,6 +32,19 @@ func TestVectorParse(t *testing.T) {
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
 		t.Error()
 	}
+
+	err = vec.Parse("[]")
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{}) {
+		t.Error()
+	}
+
+	err = vec.Parse("")
+	if err == nil || err.Error() != "malformed vector literal" {
+		t.Error()
+	}
 }
 
 func TestVectorMarshal(t *testing.T) {

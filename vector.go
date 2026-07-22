@@ -45,6 +45,15 @@ func (v Vector) String() string {
 
 // Parse parses a string representation of a vector.
 func (v *Vector) Parse(s string) error {
+	if len(s) < 2 {
+		return fmt.Errorf("malformed vector literal")
+	}
+
+	if len(s) == 2 {
+		v.vec = []float32{}
+		return nil
+	}
+
 	sp := strings.Split(s[1:len(s)-1], ",")
 	v.vec = make([]float32, 0, len(sp))
 	for i := 0; i < len(sp); i++ {

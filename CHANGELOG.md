@@ -1,3 +1,7 @@
+## 0.4.1 (unreleased)
+
+- Fixed panics with `Parse` methods
+
 ## 0.4.0 (2026-05-18)
 
 - Changed `ent` and `pgx` packages to modules
