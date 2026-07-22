@@ -87,13 +87,17 @@ func (scanPlanHalfVectorCodecBinary) Scan(src []byte, dst any) error {
 	}
 
 	dim := int(binary.BigEndian.Uint16(buf[0:2]))
-	if len(buf) != 4+2*dim {
-		return fmt.Errorf("invalid length")
+	if dim < 0 {
+		return fmt.Errorf("halfvec cannot have negative dimensions")
 	}
 
 	unused := binary.BigEndian.Uint16(buf[2:4])
 	if unused != 0 {
 		return fmt.Errorf("expected unused to be 0")
+	}
+
+	if len(buf) != 4+2*dim {
+		return fmt.Errorf("invalid length")
 	}
 
 	vec := make([]float32, 0, dim)

@@ -170,13 +170,17 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 
 	dim := int32(binary.BigEndian.Uint32(buf[0:4]))
 	nnz := int(binary.BigEndian.Uint32(buf[4:8]))
-	if len(buf) != 12+8*nnz {
-		return fmt.Errorf("invalid length")
+	if nnz < 0 {
+		return fmt.Errorf("sparsevec cannot have negative number of elements")
 	}
 
 	unused := binary.BigEndian.Uint32(buf[8:12])
 	if unused != 0 {
 		return fmt.Errorf("expected unused to be 0")
+	}
+
+	if len(buf) != 12+8*nnz {
+		return fmt.Errorf("invalid length")
 	}
 
 	v.dim = dim
