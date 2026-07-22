@@ -161,8 +161,16 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 		return fmt.Errorf("invalid length")
 	}
 
-	dim := binary.BigEndian.Uint32(buf[0:4])
+	dim := int32(binary.BigEndian.Uint32(buf[0:4]))
+	if dim < 0 {
+		return fmt.Errorf("sparsevec cannot have negative dimensions")
+	}
+
 	nnz := int(binary.BigEndian.Uint32(buf[4:8]))
+	if nnz < 0 {
+		return fmt.Errorf("sparsevec cannot have negative nnz")
+	}
+
 	unused := binary.BigEndian.Uint32(buf[8:12])
 	if unused != 0 {
 		return fmt.Errorf("expected unused to be 0")
@@ -172,13 +180,17 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 		return fmt.Errorf("invalid length")
 	}
 
-	v.dim = int32(dim)
+	v.dim = dim
 	v.indices = make([]int32, 0, nnz)
 	v.values = make([]float32, 0, nnz)
 	offset := 12
 
 	for i := 0; i < nnz; i++ {
-		v.indices = append(v.indices, int32(binary.BigEndian.Uint32(buf[offset:offset+4])))
+		index := int32(binary.BigEndian.Uint32(buf[offset : offset+4]))
+		if index < 0 || index >= dim {
+			return fmt.Errorf("sparsevec index out of bounds")
+		}
+		v.indices = append(v.indices, index)
 		offset += 4
 	}
 
