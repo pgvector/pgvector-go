@@ -64,6 +64,10 @@ func TestSparseVectorFromMapString(t *testing.T) {
 	if fmt.Sprint(vec) != "{1:1,3:2,5:3}/6" {
 		t.Error()
 	}
+
+	// TODO test
+	// vec = pgvector.NewSparseVectorFromMap(map[int32]float32{}, -1)
+	// vec = pgvector.NewSparseVectorFromMap(map[int32]float32{1: 1}, 0)
 }
 
 func TestSparseVectorParse(t *testing.T) {

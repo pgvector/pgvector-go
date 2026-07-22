@@ -45,7 +45,13 @@ func NewSparseVectorFromMap(elements map[int32]float32, dim int32) SparseVector 
 	for _, k := range indices {
 		values = append(values, elements[k])
 	}
-	return SparseVector{dim: dim, indices: indices, values: values}
+	v := SparseVector{dim: dim, indices: indices, values: values}
+	err := v.validate()
+	if err != nil {
+		// TODO return error in 0.5.0
+		panic(err)
+	}
+	return v
 }
 
 // Dimensions returns the number of dimensions.
