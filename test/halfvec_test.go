@@ -2,8 +2,10 @@ package pgvector_test
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/pgvector/pgvector-go"
@@ -43,6 +45,16 @@ func TestHalfVectorParse(t *testing.T) {
 
 	err = vec.Parse("")
 	if err == nil || err.Error() != "malformed halfvec literal" {
+		t.Error()
+	}
+
+	err = vec.Parse("[a]")
+	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
+		t.Error()
+	}
+
+	err = vec.Parse("[4e38]")
+	if err == nil || !errors.Is(err, strconv.ErrRange) {
 		t.Error()
 	}
 }

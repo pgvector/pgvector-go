@@ -1,8 +1,10 @@
 package pgvector_test
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/pgvector/pgvector-go"
@@ -94,6 +96,26 @@ func TestSparseVectorParse(t *testing.T) {
 
 	err = vec.Parse("{1}/6")
 	if err == nil || err.Error() != "malformed sparsevec literal" {
+		t.Error()
+	}
+
+	err = vec.Parse("{}/a")
+	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
+		t.Error()
+	}
+
+	err = vec.Parse("{a:1}/6")
+	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
+		t.Error()
+	}
+
+	err = vec.Parse("{1:a}/6")
+	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
+		t.Error()
+	}
+
+	err = vec.Parse("{1:4e38}/6")
+	if err == nil || !errors.Is(err, strconv.ErrRange) {
 		t.Error()
 	}
 }
