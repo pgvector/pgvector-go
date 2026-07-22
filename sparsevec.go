@@ -179,7 +179,7 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 		return fmt.Errorf("expected unused to be 0")
 	}
 
-	if len(buf) != 12+8*nnz {
+	if (len(buf)-12)/8 != int(dim) || (len(buf)-12)%8 != 0 {
 		return fmt.Errorf("invalid length")
 	}
 

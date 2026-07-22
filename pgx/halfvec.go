@@ -96,7 +96,7 @@ func (scanPlanHalfVectorCodecBinary) Scan(src []byte, dst any) error {
 		return fmt.Errorf("expected unused to be 0")
 	}
 
-	if len(buf) != 4+2*dim {
+	if (len(buf)-4)/2 != dim || len(buf)%2 != 0 {
 		return fmt.Errorf("invalid length")
 	}
 

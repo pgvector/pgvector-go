@@ -95,7 +95,7 @@ func (v *Vector) DecodeBinary(buf []byte) error {
 		return fmt.Errorf("expected unused to be 0")
 	}
 
-	if len(buf) != 4+4*dim {
+	if (len(buf)-4)/4 != dim || len(buf)%4 != 0 {
 		return fmt.Errorf("invalid length")
 	}
 
