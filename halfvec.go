@@ -35,6 +35,7 @@ func (v HalfVector) String() string {
 
 // Parse parses a string representation of a half vector.
 func (v *HalfVector) Parse(s string) error {
+	// TODO check brackets in 0.5.0
 	if len(s) < 2 {
 		return fmt.Errorf("malformed halfvec literal")
 	}

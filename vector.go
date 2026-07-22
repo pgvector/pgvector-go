@@ -45,6 +45,7 @@ func (v Vector) String() string {
 
 // Parse parses a string representation of a vector.
 func (v *Vector) Parse(s string) error {
+	// TODO check brackets in 0.5.0
 	if len(s) < 2 {
 		return fmt.Errorf("malformed vector literal")
 	}

@@ -110,6 +110,7 @@ func (v *SparseVector) Parse(s string) error {
 		return err
 	}
 
+	// TODO check brackets in 0.5.0
 	if len(sp[0]) < 2 {
 		return fmt.Errorf("malformed sparsevec literal")
 	}
