@@ -1,6 +1,6 @@
 ## 0.4.1 (unreleased)
 
-- Fixed panics with `Parse` methods
+- Fixed panics with `Parse` and `DecodeBinary` methods
 
 ## 0.4.0 (2026-05-18)
 
