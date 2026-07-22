@@ -86,17 +86,13 @@ func (v *Vector) DecodeBinary(buf []byte) error {
 	}
 
 	dim := int(binary.BigEndian.Uint16(buf[0:2]))
-	if dim < 0 {
-		return fmt.Errorf("vector cannot have negative dimensions")
+	if len(buf) != 4+4*dim {
+		return fmt.Errorf("invalid length")
 	}
 
 	unused := binary.BigEndian.Uint16(buf[2:4])
 	if unused != 0 {
 		return fmt.Errorf("expected unused to be 0")
-	}
-
-	if len(buf) != 4+4*dim {
-		return fmt.Errorf("invalid length")
 	}
 
 	v.vec = make([]float32, 0, dim)
