@@ -74,3 +74,39 @@ func TestSparseVectorParse(t *testing.T) {
 		t.Error()
 	}
 }
+
+func TestSparseVectorParseEmpty(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{}/3")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if vec.Dimensions() != 3 {
+		t.Errorf("dimensions = %d, want 3", vec.Dimensions())
+	}
+	if len(vec.Indices()) != 0 || len(vec.Values()) != 0 {
+		t.Errorf("got indices=%v values=%v, want empty", vec.Indices(), vec.Values())
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{0, 0, 0}) {
+		t.Errorf("slice = %v, want [0 0 0]", vec.Slice())
+	}
+
+	// Round-trip empty sparse vector (all zeros)
+	empty := pgvector.NewSparseVector([]float32{0, 0, 0})
+	err = vec.Parse(empty.String())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if vec.Dimensions() != 3 || len(vec.Indices()) != 0 {
+		t.Errorf("got dim=%d indices=%v, want dim=3 empty indices", vec.Dimensions(), vec.Indices())
+	}
+}
+
+func TestSparseVectorParseInvalid(t *testing.T) {
+	for _, s := range []string{"", "{}", "{1:1}", "1:1/3", "{1}/3", "{1:}/3"} {
+		var vec pgvector.SparseVector
+		if err := vec.Parse(s); err == nil {
+			t.Errorf("Parse(%q) succeeded, want error", s)
+		}
+	}
+}

@@ -34,6 +34,35 @@ func TestHalfVectorParse(t *testing.T) {
 	}
 }
 
+func TestHalfVectorParseEmpty(t *testing.T) {
+	var vec pgvector.HalfVector
+	err := vec.Parse("[]")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(vec.Slice()) != 0 {
+		t.Errorf("got %v, want empty", vec.Slice())
+	}
+
+	empty := pgvector.NewHalfVector([]float32{})
+	err = vec.Parse(empty.String())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(vec.Slice()) != 0 {
+		t.Errorf("got %v, want empty", vec.Slice())
+	}
+}
+
+func TestHalfVectorParseInvalid(t *testing.T) {
+	for _, s := range []string{"", "[", "]", "1,2,3", "[1,2,3"} {
+		var vec pgvector.HalfVector
+		if err := vec.Parse(s); err == nil {
+			t.Errorf("Parse(%q) succeeded, want error", s)
+		}
+	}
+}
+
 func TestHalfVectorMarshal(t *testing.T) {
 	vec := pgvector.NewHalfVector([]float32{1, 2, 3})
 	data, err := json.Marshal(vec)

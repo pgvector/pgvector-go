@@ -35,7 +35,15 @@ func (v HalfVector) String() string {
 
 // Parse parses a string representation of a half vector.
 func (v *HalfVector) Parse(s string) error {
-	sp := strings.Split(s[1:len(s)-1], ",")
+	if len(s) < 2 || s[0] != '[' || s[len(s)-1] != ']' {
+		return fmt.Errorf("invalid half vector format")
+	}
+	inner := s[1 : len(s)-1]
+	if inner == "" {
+		v.vec = []float32{}
+		return nil
+	}
+	sp := strings.Split(inner, ",")
 	v.vec = make([]float32, 0, len(sp))
 	for i := 0; i < len(sp); i++ {
 		n, err := strconv.ParseFloat(sp[i], 32)
