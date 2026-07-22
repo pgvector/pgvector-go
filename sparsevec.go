@@ -136,7 +136,7 @@ func (v *SparseVector) Parse(s string) error {
 		v.values = append(v.values, float32(n2))
 	}
 
-	return nil
+	return v.validate()
 }
 
 // EncodeBinary encodes a binary representation of the sparse vector.
@@ -162,13 +162,9 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 	}
 
 	dim := int32(binary.BigEndian.Uint32(buf[0:4]))
-	if dim < 0 {
-		return fmt.Errorf("sparsevec cannot have negative dimensions")
-	}
-
 	nnz := int(binary.BigEndian.Uint32(buf[4:8]))
 	if nnz < 0 {
-		return fmt.Errorf("sparsevec cannot have negative nnz")
+		return fmt.Errorf("sparsevec cannot have negative number of elements")
 	}
 
 	unused := binary.BigEndian.Uint32(buf[8:12])
@@ -186,17 +182,27 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 	offset := 12
 
 	for i := 0; i < nnz; i++ {
-		index := int32(binary.BigEndian.Uint32(buf[offset : offset+4]))
-		if index < 0 || index >= dim {
-			return fmt.Errorf("sparsevec index out of bounds")
-		}
-		v.indices = append(v.indices, index)
+		v.indices = append(v.indices, int32(binary.BigEndian.Uint32(buf[offset:offset+4])))
 		offset += 4
 	}
 
 	for i := 0; i < nnz; i++ {
 		v.values = append(v.values, math.Float32frombits(binary.BigEndian.Uint32(buf[offset:offset+4])))
 		offset += 4
+	}
+
+	return v.validate()
+}
+
+func (v *SparseVector) validate() error {
+	if v.dim < 0 {
+		return fmt.Errorf("sparsevec cannot have negative dimensions")
+	}
+
+	for _, index := range v.indices {
+		if index < 0 || index >= v.dim {
+			return fmt.Errorf("sparsevec index out of bounds")
+		}
 	}
 
 	return nil

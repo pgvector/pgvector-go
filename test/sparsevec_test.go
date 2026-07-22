@@ -99,6 +99,16 @@ func TestSparseVectorParse(t *testing.T) {
 		t.Error()
 	}
 
+	err = vec.Parse("{}/-1")
+	if err == nil || err.Error() != "sparsevec cannot have negative dimensions" {
+		t.Error()
+	}
+
+	err = vec.Parse("{1:1}/0")
+	if err == nil || err.Error() != "sparsevec index out of bounds" {
+		t.Error()
+	}
+
 	err = vec.Parse("{}/a")
 	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
 		t.Error()
