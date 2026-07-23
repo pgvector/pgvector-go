@@ -46,6 +46,7 @@ func (v Vector) String() string {
 // Parse parses a string representation of a vector.
 func (v *Vector) Parse(s string) error {
 	// TODO check brackets in 0.5.0
+	s = strings.TrimSpace(s)
 	if len(s) < 2 {
 		return fmt.Errorf("malformed vector literal")
 	}
@@ -58,7 +59,7 @@ func (v *Vector) Parse(s string) error {
 	sp := strings.Split(s[1:len(s)-1], ",")
 	v.vec = make([]float32, 0, len(sp))
 	for i := 0; i < len(sp); i++ {
-		n, err := strconv.ParseFloat(sp[i], 32)
+		n, err := strconv.ParseFloat(strings.TrimSpace(sp[i]), 32)
 		if err != nil {
 			return err
 		}

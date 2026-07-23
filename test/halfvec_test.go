@@ -57,6 +57,14 @@ func TestHalfVectorParse(t *testing.T) {
 	if err == nil || !errors.Is(err, strconv.ErrRange) {
 		t.Error()
 	}
+
+	err = vec.Parse(" [1, 2, 3] ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
+		t.Error()
+	}
 }
 
 func TestHalfVectorMarshal(t *testing.T) {
