@@ -1,4 +1,4 @@
-## 0.4.1 (unreleased)
+## 0.4.1 (2026-07-29)
 
 - Fixed possible panics with `Parse` and `DecodeBinary` methods
 
