@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go: [1.26, 1.25]
+        go: [1.27, 1.26, 1.25]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
