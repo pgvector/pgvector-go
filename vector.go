@@ -57,8 +57,8 @@ func (v *Vector) Parse(s string) error {
 
 	sp := strings.Split(s[1:len(s)-1], ",")
 	v.vec = make([]float32, 0, len(sp))
-	for i := range sp {
-		n, err := strconv.ParseFloat(sp[i], 32)
+	for _, si := range sp {
+		n, err := strconv.ParseFloat(si, 32)
 		if err != nil {
 			return err
 		}

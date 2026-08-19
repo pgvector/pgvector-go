@@ -23,10 +23,10 @@ func NewSparseVector(vec []float32) SparseVector {
 	dim := int32(len(vec))
 	indices := make([]int32, 0)
 	values := make([]float32, 0)
-	for i := range vec {
-		if vec[i] != 0 {
+	for i, v := range vec {
+		if v != 0 {
 			indices = append(indices, int32(i))
-			values = append(values, vec[i])
+			values = append(values, v)
 		}
 	}
 	return SparseVector{dim: dim, indices: indices, values: values}
