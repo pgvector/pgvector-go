@@ -163,7 +163,7 @@ func TestPgx(t *testing.T) {
 		pgx.Identifier{"pgx_items"},
 		[]string{"embedding", "half_embedding", "binary_embedding", "sparse_embedding"},
 		pgx.CopyFromSlice(1, func(i int) ([]any, error) {
-			return []interface{}{"[1,2,3]", "[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
+			return []any{"[1,2,3]", "[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
 		}),
 	)
 	if err != nil {
@@ -188,7 +188,7 @@ func TestPgx(t *testing.T) {
 		pgx.Identifier{"pgx_items"},
 		[]string{"embedding", "half_embedding", "binary_embedding", "sparse_embedding"},
 		pgx.CopyFromSlice(1, func(i int) ([]any, error) {
-			return []interface{}{"[1,2,3]", "[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
+			return []any{"[1,2,3]", "[1,2,3]", "101", "{1:1,2:2,3:3}/3"}, nil
 		}),
 	)
 	if err != nil {

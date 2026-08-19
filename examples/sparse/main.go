@@ -123,7 +123,7 @@ func Embed(inputs []string) ([]map[int32]float32, error) {
 		return nil, fmt.Errorf("Bad status code: %d", resp.StatusCode)
 	}
 
-	var result []interface{}
+	var result []any
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
 		return nil, err
@@ -132,8 +132,8 @@ func Embed(inputs []string) ([]map[int32]float32, error) {
 	var embeddings []map[int32]float32
 	for _, item := range result {
 		embedding := make(map[int32]float32)
-		for _, v := range item.([]interface{}) {
-			e := v.(map[string]interface{})
+		for _, v := range item.([]any) {
+			e := v.(map[string]any)
 			embedding[int32(e["index"].(float64))] = float32(e["value"].(float64))
 		}
 		embeddings = append(embeddings, embedding)

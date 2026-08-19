@@ -16,9 +16,9 @@ func main() {
 	rows := 1000000
 	dimensions := 128
 	embeddings := make([][]float32, 0, rows)
-	for i := 0; i < rows; i++ {
+	for range rows {
 		embedding := make([]float32, 0, dimensions)
-		for j := 0; j < dimensions; j++ {
+		for range dimensions {
 			embedding = append(embedding, rand.Float32())
 		}
 		embeddings = append(embeddings, embedding)
@@ -67,7 +67,7 @@ func main() {
 			if i%10000 == 0 {
 				fmt.Printf(".")
 			}
-			return []interface{}{pgvector.NewVector(embeddings[i])}, nil
+			return []any{pgvector.NewVector(embeddings[i])}, nil
 		}),
 	)
 	if err != nil {

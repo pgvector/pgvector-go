@@ -102,7 +102,7 @@ func (scanPlanHalfVectorCodecBinary) Scan(src []byte, dst any) error {
 
 	vec := make([]float32, 0, dim)
 	offset := 4
-	for i := 0; i < dim; i++ {
+	for range dim {
 		vec = append(vec, float16.Frombits(binary.BigEndian.Uint16(buf[offset:offset+2])).Float32())
 		offset += 2
 	}

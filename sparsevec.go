@@ -23,7 +23,7 @@ func NewSparseVector(vec []float32) SparseVector {
 	dim := int32(len(vec))
 	indices := make([]int32, 0)
 	values := make([]float32, 0)
-	for i := 0; i < len(vec); i++ {
+	for i := range vec {
 		if vec[i] != 0 {
 			indices = append(indices, int32(i))
 			values = append(values, vec[i])
@@ -188,12 +188,12 @@ func (v *SparseVector) DecodeBinary(buf []byte) error {
 	v.values = make([]float32, 0, nnz)
 	offset := 12
 
-	for i := 0; i < nnz; i++ {
+	for range nnz {
 		v.indices = append(v.indices, int32(binary.BigEndian.Uint32(buf[offset:offset+4])))
 		offset += 4
 	}
 
-	for i := 0; i < nnz; i++ {
+	for range nnz {
 		v.values = append(v.values, math.Float32frombits(binary.BigEndian.Uint32(buf[offset:offset+4])))
 		offset += 4
 	}
@@ -219,7 +219,7 @@ func (v *SparseVector) validate() error {
 var _ sql.Scanner = (*SparseVector)(nil)
 
 // Scan implements the sql.Scanner interface.
-func (v *SparseVector) Scan(src interface{}) (err error) {
+func (v *SparseVector) Scan(src any) (err error) {
 	switch src := src.(type) {
 	case []byte:
 		return v.Parse(string(src))

@@ -16,9 +16,9 @@ func main() {
 	dimensions := 128
 	embeddings := make([][]float32, 0, rows)
 	categories := make([]int64, 0, rows)
-	for i := 0; i < rows; i++ {
+	for range rows {
 		embedding := make([]float32, 0, dimensions)
-		for j := 0; j < dimensions; j++ {
+		for range dimensions {
 			embedding = append(embedding, rand.Float32())
 		}
 		embeddings = append(embeddings, embedding)
@@ -94,7 +94,7 @@ func main() {
 		pgx.Identifier{"items"},
 		[]string{"embedding", "category_id"},
 		pgx.CopyFromSlice(len(embeddings), func(i int) ([]any, error) {
-			return []interface{}{pgvector.NewVector(embeddings[i]), categories[i]}, nil
+			return []any{pgvector.NewVector(embeddings[i]), categories[i]}, nil
 		}),
 	)
 	if err != nil {
@@ -108,7 +108,7 @@ func main() {
 	}
 
 	fmt.Println("Running distributed queries")
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		rows, err := conn.Query(ctx, "SELECT id FROM items ORDER BY embedding <-> $1 LIMIT 10", pgvector.NewVector(embeddings[rand.IntN(rows)]))
 		if err != nil {
 			panic(err)

@@ -47,7 +47,7 @@ func (v *HalfVector) Parse(s string) error {
 
 	sp := strings.Split(s[1:len(s)-1], ",")
 	v.vec = make([]float32, 0, len(sp))
-	for i := 0; i < len(sp); i++ {
+	for i := range sp {
 		n, err := strconv.ParseFloat(sp[i], 32)
 		if err != nil {
 			return err
@@ -80,7 +80,7 @@ func (v *HalfVector) SetSlice(vec []float32) {
 var _ sql.Scanner = (*HalfVector)(nil)
 
 // Scan implements the sql.Scanner interface.
-func (v *HalfVector) Scan(src interface{}) (err error) {
+func (v *HalfVector) Scan(src any) (err error) {
 	switch src := src.(type) {
 	case []byte:
 		return v.Parse(string(src))

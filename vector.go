@@ -57,7 +57,7 @@ func (v *Vector) Parse(s string) error {
 
 	sp := strings.Split(s[1:len(s)-1], ",")
 	v.vec = make([]float32, 0, len(sp))
-	for i := 0; i < len(sp); i++ {
+	for i := range sp {
 		n, err := strconv.ParseFloat(sp[i], 32)
 		if err != nil {
 			return err
@@ -101,7 +101,7 @@ func (v *Vector) DecodeBinary(buf []byte) error {
 
 	v.vec = make([]float32, 0, dim)
 	offset := 4
-	for i := 0; i < dim; i++ {
+	for range dim {
 		v.vec = append(v.vec, math.Float32frombits(binary.BigEndian.Uint32(buf[offset:offset+4])))
 		offset += 4
 	}
@@ -112,7 +112,7 @@ func (v *Vector) DecodeBinary(buf []byte) error {
 var _ sql.Scanner = (*Vector)(nil)
 
 // Scan implements the sql.Scanner interface.
-func (v *Vector) Scan(src interface{}) (err error) {
+func (v *Vector) Scan(src any) (err error) {
 	switch src := src.(type) {
 	case []byte:
 		return v.Parse(string(src))

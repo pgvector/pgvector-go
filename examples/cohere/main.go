@@ -126,16 +126,16 @@ func Embed(texts []string, inputType string, apiKey string) ([][]byte, error) {
 		return nil, fmt.Errorf("Bad status code: %d", resp.StatusCode)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
 		return nil, err
 	}
 
 	var embeddings [][]byte
-	for _, item := range result["embeddings"].(map[string]interface{})["ubinary"].([]interface{}) {
-		embedding := make([]byte, 0, len(item.([]interface{})))
-		for _, v := range item.([]interface{}) {
+	for _, item := range result["embeddings"].(map[string]any)["ubinary"].([]any) {
+		embedding := make([]byte, 0, len(item.([]any)))
+		for _, v := range item.([]any) {
 			embedding = append(embedding, uint8(v.(float64)))
 		}
 		embeddings = append(embeddings, embedding)

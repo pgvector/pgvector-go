@@ -68,7 +68,7 @@ func TestGorm(t *testing.T) {
 
 	var items []GormItem
 	db.Clauses(clause.OrderBy{
-		Expression: clause.Expr{SQL: "embedding <-> ?", Vars: []interface{}{pgvector.NewVector([]float32{1, 1, 1})}},
+		Expression: clause.Expr{SQL: "embedding <-> ?", Vars: []any{pgvector.NewVector([]float32{1, 1, 1})}},
 	}).Limit(5).Find(&items)
 	if items[0].ID != 1 || items[1].ID != 3 || items[2].ID != 2 {
 		t.Error()
