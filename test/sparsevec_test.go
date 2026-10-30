@@ -1,8 +1,10 @@
 package pgvector_test
 
 import (
+	"encoding/binary"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strconv"
 	"testing"
@@ -144,6 +146,27 @@ func TestSparseVectorEncodeBinary(t *testing.T) {
 }
 
 func TestSparseVectorDecodeBinary(t *testing.T) {
+	var vec pgvector.SparseVector
+	buf := make([]byte, 0)
+	buf = binary.BigEndian.AppendUint32(buf, 6)
+	buf = binary.BigEndian.AppendUint32(buf, 3)
+	buf = binary.BigEndian.AppendUint32(buf, 0)
+	buf = binary.BigEndian.AppendUint32(buf, 0)
+	buf = binary.BigEndian.AppendUint32(buf, 2)
+	buf = binary.BigEndian.AppendUint32(buf, 4)
+	buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(1.0))
+	buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(2.0))
+	buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(3.0))
+	err := vec.DecodeBinary(buf)
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
+		t.Error()
+	}
+}
+
+func TestSparseVectorDecodeBinaryZeroLength(t *testing.T) {
 	var vec pgvector.SparseVector
 	buf := make([]byte, 0)
 	err := vec.DecodeBinary(buf)

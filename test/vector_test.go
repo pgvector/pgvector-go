@@ -1,9 +1,11 @@
 package pgvector_test
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strconv"
 	"testing"
@@ -69,6 +71,23 @@ func TestVectorEncodeBinary(t *testing.T) {
 }
 
 func TestVectorDecodeBinary(t *testing.T) {
+	var vec pgvector.Vector
+	buf := make([]byte, 0)
+	buf = binary.BigEndian.AppendUint16(buf, 3)
+	buf = binary.BigEndian.AppendUint16(buf, 0)
+	buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(1.0))
+	buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(2.0))
+	buf = binary.BigEndian.AppendUint32(buf, math.Float32bits(3.0))
+	err := vec.DecodeBinary(buf)
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
+		t.Error()
+	}
+}
+
+func TestVectorDecodeBinaryZeroLength(t *testing.T) {
 	var vec pgvector.Vector
 	buf := make([]byte, 0)
 	err := vec.DecodeBinary(buf)
