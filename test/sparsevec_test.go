@@ -133,3 +133,30 @@ func TestSparseVectorParse(t *testing.T) {
 		t.Error()
 	}
 }
+
+func TestSparseVectorEncodeBinary(t *testing.T) {
+	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
+	buf := make([]byte, 0)
+	_, err := vec.EncodeBinary(buf)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func TestSparseVectorDecodeBinary(t *testing.T) {
+	var vec pgvector.SparseVector
+	buf := make([]byte, 0)
+	err := vec.DecodeBinary(buf)
+	if err == nil || err.Error() != "invalid length" {
+		t.Error()
+	}
+}
+
+func TestSparseVectorDecodeBinaryNonZeroUnused(t *testing.T) {
+	var vec pgvector.SparseVector
+	buf := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}
+	err := vec.DecodeBinary(buf)
+	if err == nil || err.Error() != "expected unused to be 0" {
+		t.Error()
+	}
+}

@@ -59,6 +59,18 @@ func TestHalfVectorParse(t *testing.T) {
 	}
 }
 
+func TestHalfVectorEncodeText(t *testing.T) {
+	vec := pgvector.NewHalfVector([]float32{1, 2, 3})
+	buf := make([]byte, 0)
+	newBuf, err := vec.EncodeText(buf)
+	if err != nil {
+		panic(err)
+	}
+	if string(newBuf) != "[1,2,3]" {
+		t.Error()
+	}
+}
+
 func TestHalfVectorMarshal(t *testing.T) {
 	vec := pgvector.NewHalfVector([]float32{1, 2, 3})
 	data, err := json.Marshal(vec)

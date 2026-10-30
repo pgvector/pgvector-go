@@ -59,6 +59,33 @@ func TestVectorParse(t *testing.T) {
 	}
 }
 
+func TestVectorEncodeBinary(t *testing.T) {
+	vec := pgvector.NewVector([]float32{1, 2, 3})
+	buf := make([]byte, 0)
+	_, err := vec.EncodeBinary(buf)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func TestVectorDecodeBinary(t *testing.T) {
+	var vec pgvector.Vector
+	buf := make([]byte, 0)
+	err := vec.DecodeBinary(buf)
+	if err == nil || err.Error() != "invalid length" {
+		t.Error()
+	}
+}
+
+func TestVectorDecodeBinaryNonZeroUnused(t *testing.T) {
+	var vec pgvector.Vector
+	buf := []byte{0, 0, 0, 1}
+	err := vec.DecodeBinary(buf)
+	if err == nil || err.Error() != "expected unused to be 0" {
+		t.Error()
+	}
+}
+
 func TestVectorMarshal(t *testing.T) {
 	vec := pgvector.NewVector([]float32{1, 2, 3})
 	data, err := json.Marshal(vec)
