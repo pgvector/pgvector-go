@@ -81,56 +81,86 @@ func TestSparseVectorParse(t *testing.T) {
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 0, 2, 0, 3, 0}) {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("{}/0")
+func TestSparseVectorParseZeroDimensions(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{}/0")
 	if err != nil {
 		panic(err)
 	}
 	if !reflect.DeepEqual(vec.Slice(), []float32{}) {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("")
+func TestSparseVectorParseZeroLength(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("")
 	if err == nil || err.Error() != "malformed sparsevec literal" {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("/6")
+func TestSparseVectorParseZeroElements(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("/6")
 	if err == nil || err.Error() != "malformed sparsevec literal" {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("{1}/6")
+func TestSparseVectorParseNoValue(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{1}/6")
 	if err == nil || err.Error() != "malformed sparsevec literal" {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("{}/-1")
+func TestSparseVectorParseNegativeDimensions(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{}/-1")
 	if err == nil || err.Error() != "sparsevec cannot have negative dimensions" {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("{1:1}/0")
+func TestSparseVectorParseOutOfBoundsIndex(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{1:1}/0")
 	if err == nil || err.Error() != "sparsevec index out of bounds" {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("{}/a")
+func TestSparseVectorParseNonNumberDimensions(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{}/a")
 	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("{a:1}/6")
+func TestSparseVectorParseNonNumberIndex(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{a:1}/6")
 	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("{1:a}/6")
+func TestSparseVectorParseNonNumberValue(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{1:a}/6")
 	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("{1:4e38}/6")
+func TestSparseVectorParseOutOfRangeValue(t *testing.T) {
+	var vec pgvector.SparseVector
+	err := vec.Parse("{1:4e38}/6")
 	if err == nil || !errors.Is(err, strconv.ErrRange) {
 		t.Error()
 	}

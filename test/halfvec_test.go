@@ -34,26 +34,62 @@ func TestHalfVectorParse(t *testing.T) {
 	if !reflect.DeepEqual(vec.Slice(), []float32{1, 2, 3}) {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("[]")
+func TestHalfVectorParseZeroDimensions(t *testing.T) {
+	var vec pgvector.HalfVector
+	err := vec.Parse("[]")
 	if err != nil {
 		panic(err)
 	}
 	if !reflect.DeepEqual(vec.Slice(), []float32{}) {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("")
+func TestHalfVectorParseZeroLength(t *testing.T) {
+	var vec pgvector.HalfVector
+	err := vec.Parse("")
 	if err == nil || err.Error() != "malformed halfvec literal" {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("[a]")
+// TODO error in 0.5.0
+func TestHalfVectorParseOpenBracket(t *testing.T) {
+	var vec pgvector.HalfVector
+	err := vec.Parse("{1]")
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{1}) {
+		t.Error()
+	}
+}
+
+// TODO error in 0.5.0
+func TestHalfVectorParseCloseBracket(t *testing.T) {
+	var vec pgvector.HalfVector
+	err := vec.Parse("[1}")
+	if err != nil {
+		panic(err)
+	}
+	if !reflect.DeepEqual(vec.Slice(), []float32{1}) {
+		t.Error()
+	}
+}
+
+func TestHalfVectorParseNonNumber(t *testing.T) {
+	var vec pgvector.HalfVector
+	err := vec.Parse("[a]")
 	if err == nil || !errors.Is(err, strconv.ErrSyntax) {
 		t.Error()
 	}
+}
 
-	err = vec.Parse("[4e38]")
+func TestHalfVectorParseOutOfRange(t *testing.T) {
+	var vec pgvector.HalfVector
+	err := vec.Parse("[4e38]")
 	if err == nil || !errors.Is(err, strconv.ErrRange) {
 		t.Error()
 	}
