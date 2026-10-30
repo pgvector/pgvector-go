@@ -64,9 +64,18 @@ func TestVectorParse(t *testing.T) {
 func TestVectorEncodeBinary(t *testing.T) {
 	vec := pgvector.NewVector([]float32{1, 2, 3})
 	buf := make([]byte, 0)
-	_, err := vec.EncodeBinary(buf)
+	got, err := vec.EncodeBinary(buf)
 	if err != nil {
 		panic(err)
+	}
+	want := make([]byte, 0)
+	want = binary.BigEndian.AppendUint16(want, 3)
+	want = binary.BigEndian.AppendUint16(want, 0)
+	want = binary.BigEndian.AppendUint32(want, math.Float32bits(1.0))
+	want = binary.BigEndian.AppendUint32(want, math.Float32bits(2.0))
+	want = binary.BigEndian.AppendUint32(want, math.Float32bits(3.0))
+	if !reflect.DeepEqual(got, want) {
+		t.Error()
 	}
 }
 

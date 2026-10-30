@@ -139,9 +139,22 @@ func TestSparseVectorParse(t *testing.T) {
 func TestSparseVectorEncodeBinary(t *testing.T) {
 	vec := pgvector.NewSparseVector([]float32{1, 0, 2, 0, 3, 0})
 	buf := make([]byte, 0)
-	_, err := vec.EncodeBinary(buf)
+	got, err := vec.EncodeBinary(buf)
 	if err != nil {
 		panic(err)
+	}
+	want := make([]byte, 0)
+	want = binary.BigEndian.AppendUint32(want, 6)
+	want = binary.BigEndian.AppendUint32(want, 3)
+	want = binary.BigEndian.AppendUint32(want, 0)
+	want = binary.BigEndian.AppendUint32(want, 0)
+	want = binary.BigEndian.AppendUint32(want, 2)
+	want = binary.BigEndian.AppendUint32(want, 4)
+	want = binary.BigEndian.AppendUint32(want, math.Float32bits(1.0))
+	want = binary.BigEndian.AppendUint32(want, math.Float32bits(2.0))
+	want = binary.BigEndian.AppendUint32(want, math.Float32bits(3.0))
+	if !reflect.DeepEqual(got, want) {
+		t.Error()
 	}
 }
 
